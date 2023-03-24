@@ -23,8 +23,10 @@ local socket_address(opts) = {
   },
   // 返回一個 config.core.v3.Address 並且設置 socket_address 字段
   //
-  // socket_address(':::80',{ipv4_compat:true})
+  // addr: string host:port
+  //
+  // base?: config.core.v3.SocketAddress
   //
   // https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#config-core-v3-address
-  socket_address: socket_address,
+  socket_address(opts): socket_address(opts),
 }
