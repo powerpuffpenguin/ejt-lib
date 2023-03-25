@@ -1,3 +1,10 @@
+export namespace extensions.transport_sockets.tls.v3 {
+    /**
+     * @alpha
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/transport_sockets/tls/v3/secret.proto#envoy-v3-api-msg-extensions-transport-sockets-tls-v3-secret extensions.transport_sockets.tls.v3.Secret}
+     */
+    export interface Secret { }
+}
 export namespace config {
     export namespace accesslog.v3 {
         /**
@@ -31,7 +38,23 @@ export namespace config {
              * @alpha
              * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-bootstrap-staticresources config.bootstrap.v3.Bootstrap.StaticResources}
              */
-            export interface StaticResources { }
+            export interface StaticResources {
+                /**
+                 * 靜態監聽器。 無論 LDS 配置如何，這些偵聽器都可用。
+                 * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener.proto#envoy-v3-api-msg-config-listener-v3-listener config.core.v3.Listener}
+                 */
+                listeners?: Array<config.core.v3.Listener>
+                /**
+                 * 如果為 cds_config 指定了基於網絡的配置源，則有必要提供一些初始集群定義，以允許 Envoy 知道如何與管理服務器通信。 這些集群定義可能不使用 EDS（即它們應該是靜態 IP 或基於 DNS）
+                 * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster config.core.v3.Cluster}
+                 */
+                clusters?: Array<config.core.v3.Cluster>
+                /**
+                 * SdsSecretConfig 可以使用這些靜態 secrets
+                 * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/transport_sockets/tls/v3/secret.proto#envoy-v3-api-msg-extensions-transport-sockets-tls-v3-secret extensions.transport_sockets.tls.v3.Secret}
+                 */
+                secrets?: Array<extensions.transport_sockets.tls.v3.Secret>
+            }
             /**
              * @alpha
              * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#config-bootstrap-v3-bootstrap-dynamicresources config.bootstrap.v3.Bootstrap.DynamicResources}
@@ -448,6 +471,18 @@ export namespace config {
          */
         export interface TypedExtensionConfig { }
 
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener.proto#envoy-v3-api-msg-config-listener-v3-listener config.core.v3.Listener}
+         */
+        export interface Listener {
+        }
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster config.core.v3.Cluster}
+         */
+        export interface Cluster {
+        }
     }
     export namespace overload.v3 {
         /**

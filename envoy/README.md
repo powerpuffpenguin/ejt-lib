@@ -1,7 +1,8 @@
 # envoy
 
 - [init](#init)
-  - [envoy.jsonnet](#envoy.jsonnet)
+- [envoy.jsonnet](#envoy.jsonnet)
+- [cds.jsonnet](#cds.jsonnet)
 
 # init
 
@@ -98,3 +99,15 @@ local core = import 'envoy/v3/core.libsonnet';
 - layered\_runtime 中限制了監聽器和總的socket連接數，請改爲具體的真實值
 - admin 在 8000 端口配置了一個管理服務器，以及將管理日誌輸出到 stdout
 - dynamic_resources 定義了從檔案動態加載監聽器和後端集群
+
+# cds.jsonnet
+
+cds.jsonnet 會被轉換爲 cds.yaml 作爲 envoy 的
+[CDS](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-field-config-bootstrap-v3-bootstrap-dynamicresources-cds-config)
+資源用於動態指定集群，它通常長這樣:
+
+```
+{
+  resources: [],
+}
+```
