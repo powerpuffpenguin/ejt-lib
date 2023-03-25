@@ -36,7 +36,26 @@ export namespace config {
              * @alpha
              * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#config-bootstrap-v3-bootstrap-dynamicresources}
              */
-            export interface DynamicResources { }
+            export interface DynamicResources {
+                /**
+                 * 所有{@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener.proto#envoy-v3-api-msg-config-listener-v3-listener 監聽器}都由單個  {@link https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/operations/dynamic_configuration#arch-overview-dynamic-config-lds LDS} 配置源提供
+                 * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/config_source.proto#envoy-v3-api-msg-config-core-v3-configsource config.core.v3.ConfigSource}
+                 */
+                lds_config?: config.core.v3.ConfigSource
+                /**
+                 * 所有的後端{@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster 集群}由單個  {@link https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/operations/dynamic_configuration#arch-overview-dynamic-config-cds CDS} 配置源提供
+                 * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/config_source.proto#envoy-v3-api-msg-config-core-v3-configsource config.core.v3.ConfigSource}
+                 */
+                cds_config?: config.core.v3.ConfigSource
+                /**
+                 * 可以選擇性地指定單個 {@link https://www.envoyproxy.io/docs/envoy/latest/configuration/overview/xds_api#config-overview-ads ADS} 源。
+                 * 這必須具有 {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/config_source.proto#envoy-v3-api-field-config-core-v3-apiconfigsource-api-type api_type GRPC}。 
+                 * 只有設置了廣告字段的 {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/config_source.proto#envoy-v3-api-msg-config-core-v3-configsource ConfigSources} 才會在 ADS 頻道上流式傳輸。
+                 * 
+                 * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/config_source.proto#envoy-v3-api-msg-config-core-v3-apiconfigsource config.core.v3.ApiConfigSource}
+                 */
+                ads_config?: config.core.v3.ApiConfigSource
+            }
         }
         /**
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-admin}
@@ -44,6 +63,7 @@ export namespace config {
         export interface Admin {
             /**
              * 管理服務器的日誌配置
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/accesslog/v3/accesslog.proto#envoy-v3-api-msg-config-accesslog-v3-accesslog}
              */
             access_log?: Array<config.accesslog.v3.AccessLog>
             /**
@@ -55,10 +75,12 @@ export namespace config {
             /**
              * 管理服務器將偵聽的 TCP 地址。
              * 如果未指定，Envoy 將不會啟動管理服務器。
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#envoy-v3-api-msg-config-core-v3-address}
              */
             address: config.core.v3.Address
             /**
              * Envoy 源代碼或預編譯二進製文件中可能不存在的其他套接字選項
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/socket_option.proto#envoy-v3-api-msg-config-core-v3-socketoption}
              */
             socket_options: config.core.v3.SocketOption
             /**
@@ -304,11 +326,17 @@ export namespace config {
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-extension}
          */
         export interface Extension { }
+
         /**
          * @alpha
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/config_source.proto#envoy-v3-api-msg-config-core-v3-apiconfigsource}
          */
         export interface ApiConfigSource { }
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/config_source.proto#envoy-v3-api-msg-config-core-v3-configsource}
+         */
+        export interface ConfigSource { }
         /**
          * @alpha
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/extension.proto#envoy-v3-api-msg-config-core-v3-typedextensionconfig}
@@ -352,29 +380,29 @@ export interface Envoy {
     /**
      * 用於標識節點身份讓管理服務器可以識別 envoy 節點(例如在生成的 headers 中)
      * 
-     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-node}
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-node config.core.v3.Node}
      */
     node?: config.core.v3.Node
     /**
      * 指定靜態資源
      * 
-     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-bootstrap-staticresources}
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-bootstrap-staticresources config.bootstrap.v3.Bootstrap.StaticResources}
      */
     static_resources?: config.bootstrap.v3.Bootstrap.StaticResources
     /**
      * 使用 xDS 配置動態資源
      * 
-     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#config-bootstrap-v3-bootstrap-dynamicresources}
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#config-bootstrap-v3-bootstrap-dynamicresources config.bootstrap.v3.Bootstrap.DynamicResources}
      */
     dynamic_resources?: config.bootstrap.v3.Bootstrap.DynamicResources
     /**
      * 擁有服務器內所有上游集群的集群管理器的配置
-     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-clustermanager}
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-clustermanager config.bootstrap.v3.ClusterManager}
      */
     cluster_manager?: config.bootstrap.v3.ClusterManager
     /**
      * 健康發現服務配置選項
-     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/config_source.proto#envoy-v3-api-msg-config-core-v3-apiconfigsource}
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/config_source.proto#envoy-v3-api-msg-config-core-v3-apiconfigsource config.core.v3.ApiConfigSource}
      */
     hds_config?: config.core.v3.ApiConfigSource
     /**
@@ -383,12 +411,12 @@ export interface Envoy {
     flags_path?: string
     /**
      * 可選的統計接收器
-     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/metrics/v3/stats.proto#envoy-v3-api-msg-config-metrics-v3-statssink}
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/metrics/v3/stats.proto#envoy-v3-api-msg-config-metrics-v3-statssink config.metrics.v3.StatsSink}
      */
     stats_sinks?: Array<config.metrics.v3.StatsSink>
     /**
      * 統計數據內部處理的配置
-     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/metrics/v3/stats.proto#envoy-v3-api-msg-config-metrics-v3-statsconfig}
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/metrics/v3/stats.proto#envoy-v3-api-msg-config-metrics-v3-statsconfig config.metrics.v3.StatsConfig}
      */
     stats_config?: config.metrics.v3.StatsConfig
     /**
@@ -401,7 +429,8 @@ export interface Envoy {
      * 持續時間必須至少為 1 毫秒，最多為 5 分鐘。
      * 
      * @defaultValue 5000
-     * {@link https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#duration}
+     * 
+     * {@link https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#duration Duration}
      */
     stats_flush_interval?: number
     /**
@@ -413,32 +442,32 @@ export interface Envoy {
     stats_flush_on_admin?: boolean
     /**
      * 可選看門狗配置。 這是針對整個系統的單個看門狗配置。 棄用了具有更細粒度的看門狗。
-     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-watchdog}
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-watchdog config.bootstrap.v3.Watchdog}
      */
     watchdog?: config.bootstrap.v3.Watchdog
     /**
      * 可選的看門狗配置。 這用於為不同的子系統指定不同的看門狗
-     * {@linkhttps://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-watchdogs}
+     * {@linkhttps://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-watchdogs config.bootstrap.v3.Watchdogs}
      */
     watchdogs?: config.bootstrap.v3.Watchdogs
     /**
      * 外部跟踪提供程序的配置
-     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/trace/v3/http_tracer.proto#envoy-v3-api-msg-config-trace-v3-tracing}
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/trace/v3/http_tracer.proto#envoy-v3-api-msg-config-trace-v3-tracing config.trace.v3.Tracing}
      */
     tracing?: config.trace.v3.Tracing
     /**
      * 運行時配置提供程序的配置。 如果未指定，將使用 null 提供程序，這將導致使用所有默認值。
-     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-layeredruntime}
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-layeredruntime config.bootstrap.v3.LayeredRuntime}
      */
     layered_runtime?: config.bootstrap.v3.LayeredRuntime
     /**
      * 本地管理 HTTP 服務器的配置
-     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-admin}
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-admin config.bootstrap.v3.Admin}
      */
     admin?: config.bootstrap.v3.Admin
     /**
      * 可選的過載管理器配置
-     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/overload/v3/overload.proto#envoy-v3-api-msg-config-overload-v3-overloadmanager}
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/overload/v3/overload.proto#envoy-v3-api-msg-config-overload-v3-overloadmanager config.overload.v3.OverloadManager}
      */
     overload_manager?: config.overload.v3.OverloadManager
     /**
@@ -462,7 +491,8 @@ export interface Envoy {
      * UInt64Value 可選的代理版本，如果指定，將用於設置 server.version 統計信息的值
      * @remarks
      * Envoy 不會處理這個值，它會按原樣發送到統計接收器。
-     * {@link https://protobuf.dev/reference/protobuf/google.protobuf/#uint64-value}
+     * 
+     * {@link https://protobuf.dev/reference/protobuf/google.protobuf/#uint64-value UInt64Value}
      */
     stats_server_version_override?: string | bigint
     /**
@@ -479,17 +509,17 @@ export interface Envoy {
      * @remarks
      * 此擴展可用於配置 c-ares、apple 或任何其他 DNS 解析器類型和相關參數
      * 
-     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/extension.proto#envoy-v3-api-msg-config-core-v3-typedextensionconfig}
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/extension.proto#envoy-v3-api-msg-config-core-v3-typedextensionconfig config.core.v3.TypedExtensionConfig}
      */
     typed_dns_resolver_config?: config.core.v3.TypedExtensionConfig
     /**
      * 指定要在啟動時實例化的可選引導程序擴展。 每個項目都包含擴展特定的配置
-     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/extension.proto#envoy-v3-api-msg-config-core-v3-typedextensionconfig}
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/extension.proto#envoy-v3-api-msg-config-core-v3-typedextensionconfig config.core.v3.TypedExtensionConfig}
      */
     bootstrap_extensions?: Array<config.core.v3.TypedExtensionConfig>
     /**
      * 指定在啟動時實例化並在崩潰時根據導致崩潰的請求調用的可選擴展
-     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-fatalaction}
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-fatalaction config.bootstrap.v3.FatalAction}
      */
     fatal_actions?: Array<config.bootstrap.v3.FatalAction>
     /**
@@ -503,7 +533,7 @@ export interface Envoy {
      * @remarks
      * 此配置允許用戶在 Envoy 啟動時按需自定義內聯標頭，而無需修改 Envoy 的源代碼
      * 
-     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-custominlineheader}
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-custominlineheader config.bootstrap.v3.CustomInlineHeader}
      */
     inline_headers?: Array<config.bootstrap.v3.CustomInlineHeader>
     /**
@@ -514,7 +544,7 @@ export interface Envoy {
     /**
      * 正則表達式引擎。 如果未指定該值，則默認使用 Google RE2。
      * 
-     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/extension.proto#envoy-v3-api-msg-config-core-v3-typedextensionconfig}
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/extension.proto#envoy-v3-api-msg-config-core-v3-typedextensionconfig config.core.v3.TypedExtensionConfig}
      */
     default_regex_engine?: config.core.v3.TypedExtensionConfig
     /**
@@ -522,7 +552,7 @@ export interface Envoy {
      * @remarks
      * 它提供了接收、攝取或無法處理 xDS 資源和消息時的處理點。
      *  如果未指定值，則不會使用 XdsConfigTracker。
-     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/extension.proto#envoy-v3-api-msg-config-core-v3-typedextensionconfig}
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/extension.proto#envoy-v3-api-msg-config-core-v3-typedextensionconfig config.core.v3.TypedExtensionConfig}
      */
     xds_config_tracker_extension?: config.core.v3.TypedExtensionConfig
 }
