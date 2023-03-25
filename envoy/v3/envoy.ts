@@ -104,10 +104,20 @@ export namespace config {
         */
         export interface Watchdogs { }
         /**
-         * @alpha
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-layeredruntime config.bootstrap.v3.LayeredRuntime}
         */
-        export interface LayeredRuntime { }
+        export interface LayeredRuntime {
+            /**
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-runtimelayer config.bootstrap.v3.RuntimeLayer}
+             */
+            layers: Array<RuntimeLayer>
+        }
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-runtimelayer config.bootstrap.v3.RuntimeLayer}
+         */
+        export interface RuntimeLayer { }
+
         /**
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-fatalaction config.bootstrap.v3.FatalAction}
          */
@@ -342,10 +352,96 @@ export namespace config {
          */
         export interface ApiConfigSource { }
         /**
-         * @alpha
+         * 動態配置源
+         * 
+         * @remarks
+         * path, path_config_source, api_config_source, ads 必須設置其中一個
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/config_source.proto#envoy-v3-api-msg-config-core-v3-configsource config.core.v3.ConfigSource}
          */
-        export interface ConfigSource { }
+        export interface ConfigSource {
+            /**
+             * @deprecated use {@link path_config_source} instead 
+             */
+            path?: string
+            /**
+             * 本地文件系統路徑配置源
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/config_source.proto#envoy-v3-api-msg-config-core-v3-pathconfigsource config.core.v3.PathConfigSource}
+             */
+            path_config_source?: PathConfigSource
+            /**
+             * API 配置源
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/config_source.proto#envoy-v3-api-msg-config-core-v3-apiconfigsource config.core.v3.ApiConfigSource}
+             */
+            api_config_source?: ApiConfigSource
+            /**
+             * 設置後，ADS 將用於獲取資源。 使用引導程序配置中的 ADS API 配置源。
+             *  {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/config_source.proto#envoy-v3-api-msg-config-core-v3-aggregatedconfigsource config.core.v3.AggregatedConfigSource}
+             */
+            ads?: AggregatedConfigSource
+
+            /**
+             * 資源超時時間
+             * 
+             * @defaultValue 15000
+             * @remarks
+             * 指定此超時後，Envoy 將在初始化過程中等待此 xDS 訂閱上的第一個配置響應的指定時間不超過指定時間。
+             *  達到超時後，Envoy 將進入下一個初始化階段，即使第一個配置尚未交付。
+             *  計時器在 xDS API 訂閱開始時激活，並在第一次配置更新或出錯時解除。 
+             * 0 表示沒有超時 - Envoy 將無限期地等待第一個 xDS 配置（除非另一個超時適用）。 默認為 15 秒
+             * {@link https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#duration Duration}
+             */
+            initial_fetch_timeout?: number
+            /**
+             * xDS 資源的 API 版本。 
+             * 
+             * @defaultValue AUTO
+             * @remarks
+             * 這意味著客戶端將請求資源的類型 URL 以及客戶端將依次期望交付的資源類型。
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/config_source.proto#envoy-v3-api-enum-config-core-v3-apiversion config.core.v3.ApiVersion}
+             */
+            resource_api_version?: ApiVersion
+        }
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/config_source.proto#envoy-v3-api-enum-config-core-v3-apiversion config.core.v3.ApiVersion}
+         */
+        export type ApiVersion = 'AUTO' | 'V2' | 'V3'
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/config_source.proto#envoy-v3-api-msg-config-core-v3-pathconfigsource config.core.v3.PathConfigSource}
+         */
+        export interface PathConfigSource {
+            /**
+             * 檔案系統上的路徑以獲取和監視配置更新。 為 secret 獲取配置時，還會監視證書和密鑰文件的更新。
+             */
+            path: string
+            /**
+             * 如果已配置，將監視此目錄的移動。 當移動到此目錄中的條目時，將重新加載路徑。 這在某些部署場景中是必需的。
+             * 
+             * @remarks
+             * 具體來說，如果嘗試使用 Kubernetes ConfigMap 加載 xDS 資源，則可能會使用以下配置： 
+             * 1. 將 xds.yaml 存儲在 ConfigMap 中。 
+             * 2. 將 ConfigMap 掛載到 /config_map/xds 
+             * 3. 配置 path 爲 /config_map/xds/xds.yaml 
+             * 4. 配置 watched_directory 爲 /config_map/xds
+             * 上述配置將確保 Envoy 監視擁有目錄以進行移動，這是由於 Kubernetes 在原子更新期間如何管理 ConfigMap 符號鏈接所必需
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-watcheddirectory config.core.v3.WatchedDirectory}
+             */
+            watched_directory?: WatchedDirectory
+        }
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-watcheddirectory config.core.v3.WatchedDirectory}
+         */
+        export interface WatchedDirectory {
+            /**
+             * 要監聽的檔案夾路徑
+             */
+            path: string
+        }
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/config_source.proto#envoy-v3-api-msg-config-core-v3-aggregatedconfigsource config.core.v3.AggregatedConfigSource}
+         */
+        export interface AggregatedConfigSource {
+        }
         /**
          * @alpha
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/extension.proto#envoy-v3-api-msg-config-core-v3-typedextensionconfig config.core.v3.TypedExtensionConfig}

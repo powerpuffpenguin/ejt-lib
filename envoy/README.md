@@ -50,4 +50,51 @@
 envoy.jsonnet 會被轉換爲 envoy.yaml 作爲 envoy 的主要設定，它通常長這樣:
 
 ```
+local accesslog = import 'envoy/v3/accesslog.libsonnet';
+local bootstrap = import 'envoy/v3/bootstrap.libsonnet';
+local core = import 'envoy/v3/core.libsonnet';
+{
+  node: {
+    id: 'default-node',
+    cluster: 'default-cluster',
+  },
+  layered_runtime: {
+    layers: [
+      // 創建一個層設置 連接上限爲 50k
+      bootstrap.layer_connections({
+        name: 'static_layer_conns',
+        // 考慮到連接上下遊需要兩個連接所以這個值應該是 open files 的一半
+        connections: 50000,
+        // 這裏可以爲每個 監聽器設置單獨的連接上限
+        listeners: [
+          {
+            name: 'example_listener_name',
+            connections: 10000,
+          },
+        ],
+      }),
+    ],
+  },
+  // 創建管理服務器
+  admin: {
+    access_log: accesslog.stdout_log,
+    address: core.socket_address({
+      addr: ':8000',
+    }),
+  },
+  // 動態加載資源
+  dynamic_resources: {
+    cds_config: core.dynamic_path({
+      path: '/etc/envoy/cds.yaml',
+    }),
+    lds_config: core.dynamic_path({
+      path: '/etc/envoy/lds.yaml',
+    }),
+  },
+}
 ```
+
+- node 定義了這個 envoy 服務的節點名稱
+- layered\_runtime 中限制了監聽器和總的socket連接數，請改爲具體的真實值
+- admin 在 8000 端口配置了一個管理服務器，以及將管理日誌輸出到 stdout
+- dynamic_resources 定義了從檔案動態加載監聽器和後端集群

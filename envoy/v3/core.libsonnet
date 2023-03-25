@@ -13,12 +13,24 @@ local socket_address(opts) = {
     port_value: port,
   },
 };
+local dynamic_path(opts) = {
+  path_config_source: {
+    path: opts.path,
+    [if std.objectHas(opts, 'dir') then 'watched_directory']: {
+      path: opts.dir,
+    },
+  },
+};
 // 創建 config.core.v3 對象
 {
   // 創建 config.core.v3.Address 並且設置 socket_address 字段
-  // - default?: config.core.v3.SocketAddress
   // - addr: string host:port
+  // - default?: config.core.v3.SocketAddress
   //
   // https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#config-core-v3-address
   socket_address(opts): socket_address(opts),
+  // 以本地檔案創建 config.core.v3.ConfigSource
+  // - path: string 要監視的檔案
+  // - dir?: string 要監視的檔案夾
+  dynamic_path(opts): dynamic_path(opts),
 }
