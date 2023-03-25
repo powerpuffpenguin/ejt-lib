@@ -20,4 +20,4 @@ jsonnet 來替代 yaml 以簡單的書寫 envoy
 
 # envoy
 
-envoy 檔案夾下包含了一些幫助創建 envoy 配置的腳本
+[envoy](envoy/README.md) 檔案夾下包含了一些幫助創建 envoy 配置的腳本
