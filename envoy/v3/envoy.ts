@@ -1,7 +1,7 @@
 export namespace config {
     export namespace accesslog.v3 {
         /**
-         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/accesslog/v3/accesslog.proto#config-accesslog-v3-accesslog}
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/accesslog/v3/accesslog.proto#config-accesslog-v3-accesslog config.accesslog.v3.AccessLog}
          */
         export interface AccessLog {
             /**
@@ -11,7 +11,7 @@ export namespace config {
             /**
              * 用於判斷是否需要寫入訪問日誌的過濾器
              * 
-             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/accesslog/v3/accesslog.proto#envoy-v3-api-msg-config-accesslog-v3-accesslogfilter}
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/accesslog/v3/accesslog.proto#envoy-v3-api-msg-config-accesslog-v3-accesslogfilter config.accesslog.v3.AccessLogFilter}
              */
             filter?: AccessLogFilter
             /**
@@ -21,7 +21,7 @@ export namespace config {
         }
         /**
          * @alpha
-         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/accesslog/v3/accesslog.proto#envoy-v3-api-msg-config-accesslog-v3-accesslogfilter}
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/accesslog/v3/accesslog.proto#envoy-v3-api-msg-config-accesslog-v3-accesslogfilter config.accesslog.v3.AccessLogFilter}
          */
         export interface AccessLogFilter { }
     }
@@ -29,12 +29,12 @@ export namespace config {
         export namespace Bootstrap {
             /**
              * @alpha
-             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-bootstrap-staticresources}
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-bootstrap-staticresources config.bootstrap.v3.Bootstrap.StaticResources}
              */
             export interface StaticResources { }
             /**
              * @alpha
-             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#config-bootstrap-v3-bootstrap-dynamicresources}
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#config-bootstrap-v3-bootstrap-dynamicresources config.bootstrap.v3.Bootstrap.DynamicResources}
              */
             export interface DynamicResources {
                 /**
@@ -58,12 +58,12 @@ export namespace config {
             }
         }
         /**
-         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-admin}
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-admin config.bootstrap.v3.Admin}
          */
         export interface Admin {
             /**
              * 管理服務器的日誌配置
-             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/accesslog/v3/accesslog.proto#envoy-v3-api-msg-config-accesslog-v3-accesslog}
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/accesslog/v3/accesslog.proto#envoy-v3-api-msg-config-accesslog-v3-accesslog config.accesslog.v3.AccessLog}
              */
             access_log?: Array<config.accesslog.v3.AccessLog>
             /**
@@ -75,12 +75,12 @@ export namespace config {
             /**
              * 管理服務器將偵聽的 TCP 地址。
              * 如果未指定，Envoy 將不會啟動管理服務器。
-             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#envoy-v3-api-msg-config-core-v3-address}
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#envoy-v3-api-msg-config-core-v3-address config.core.v3.Address}
              */
             address: config.core.v3.Address
             /**
              * Envoy 源代碼或預編譯二進製文件中可能不存在的其他套接字選項
-             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/socket_option.proto#envoy-v3-api-msg-config-core-v3-socketoption}
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/socket_option.proto#envoy-v3-api-msg-config-core-v3-socketoption config.core.v3.SocketOption}
              */
             socket_options: config.core.v3.SocketOption
             /**
@@ -90,36 +90,36 @@ export namespace config {
         }
         /**
          * @alpha
-         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-clustermanager}
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-clustermanager config.bootstrap.v3.ClusterManager}
          */
         export interface ClusterManager { }
         /**
          * @alpha
-         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-watchdog}
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-watchdog config.bootstrap.v3.Watchdog}
          */
         export interface Watchdog { }
         /**
          * @alpha
-         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-watchdogs} 
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-watchdogs config.bootstrap.v3.Watchdogs} 
         */
         export interface Watchdogs { }
         /**
          * @alpha
-         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-layeredruntime}
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-layeredruntime config.bootstrap.v3.LayeredRuntime}
         */
         export interface LayeredRuntime { }
         /**
-         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-fatalaction}
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-fatalaction config.bootstrap.v3.FatalAction}
          */
         export interface FatalAction {
             /**
-             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/extension.proto#envoy-v3-api-msg-config-core-v3-typedextensionconfig}
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/extension.proto#envoy-v3-api-msg-config-core-v3-typedextensionconfig config.core.v3.TypedExtensionConfig}
              */
             config: config.core.v3.TypedExtensionConfig
         }
         /**
          * @alpha
-         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-custominlineheader}
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-msg-config-bootstrap-v3-custominlineheader config.bootstrap.v3.CustomInlineHeader}
          */
         export interface CustomInlineHeader { }
     }
@@ -130,22 +130,30 @@ export namespace config {
          * @remarks
          * 必須設置 socket_address, pipe, envoy_internal_address 中的一個
          * 
-         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#envoy-v3-api-msg-config-core-v3-address}
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#envoy-v3-api-msg-config-core-v3-address config.core.v3.Address}
          */
         export interface Address {
-
+            /**
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#config-core-v3-socketaddress config.core.v3.SocketAddress}
+             */
             socket_address?: SocketAddress
+            /**
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#envoy-v3-api-msg-config-core-v3-pipe config.core.v3.Pipe}
+             */
             pipe?: Pipe
+            /**
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#envoy-v3-api-msg-config-core-v3-envoyinternaladdress config.core.v3.EnvoyInternalAddress}
+             */
             envoy_internal_address?: EnvoyInternalAddress
         }
         /**
-         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#config-core-v3-socketaddress}
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#config-core-v3-socketaddress config.core.v3.SocketAddress}
          */
         export interface SocketAddress {
             /**
              * @defaultValue 'TCP'
              * 
-             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#envoy-v3-api-enum-config-core-v3-socketaddress-protocol}
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#envoy-v3-api-enum-config-core-v3-socketaddress-protocol protocol}
              */
             protocol?: 'TCP' | 'UDP'
             /**
@@ -190,10 +198,11 @@ export namespace config {
         }
         /**
          * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/socket_option.proto#envoy-v3-api-msg-config-core-v3-socketoption config.core.v3.SocketOption}
          */
         export interface SocketOption { }
         /**
-         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#envoy-v3-api-msg-config-core-v3-pipe}
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#envoy-v3-api-msg-config-core-v3-pipe config.core.v3.Pipe}
          */
         export interface Pipe {
             /**
@@ -211,7 +220,7 @@ export namespace config {
             mode?: number
         }
         /**
-         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#envoy-v3-api-msg-config-core-v3-envoyinternaladdress}
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#envoy-v3-api-msg-config-core-v3-envoyinternaladdress config.core.v3.EnvoyInternalAddress}
          */
         export interface EnvoyInternalAddress {
             /**
@@ -227,7 +236,7 @@ export namespace config {
         }
 
         /**
-         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-node}
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-node config.core.v3.Node}
          */
         export interface Node {
             /**
@@ -250,20 +259,20 @@ export namespace config {
             /**
              * 擴展節點標識符的不透明元素。Envoy 會將值直接傳遞給管理服務器
              * 
-             * {@link https://protobuf.dev/reference/protobuf/google.protobuf/#struct}
+             * {@link https://protobuf.dev/reference/protobuf/google.protobuf/#struct Struct}
              */
             metadata?: any
 
             /**
              * Record<string,xds.core.v3.ContextParams>
              * 
-             * {@link https://www.envoyproxy.io/docs/envoy/latest/xds/core/v3/context_params.proto#envoy-v3-api-msg-xds-core-v3-contextparams}
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/xds/core/v3/context_params.proto#envoy-v3-api-msg-xds-core-v3-contextparams xds.core.v3.ContextParams}
              */
             dynamic_parameters?: Record<string, any>
             /**
              * 指示 Envoy 服務器運行的位置
              * 
-             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-locality}
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-locality config.core.v3.Locality}
              */
             locality?: Locality
             /**
@@ -284,13 +293,13 @@ export namespace config {
              * @remarks
              * user_agent_version 和 user_agent_build_version 不能同時設置
              * 
-             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-buildversion}
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-buildversion config.core.v3.BuildVersion}
              */
             user_agent_build_version?: BuildVersion
             /**
              * 節點支持的擴展列表及其版本
              * 
-             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-extension}
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-extension config.core.v3.Extension}
              */
             extensions?: Array<Extension>
             /**
@@ -304,12 +313,12 @@ export namespace config {
              * @remarks
              * 例如，如果有一個監聽器 bind 到 80 端口，則該列表可以選擇包含 SocketAddress(0.0.0.0,80)。這是一個可選字段，它只是一個提示
              * 
-             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#envoy-v3-api-msg-config-core-v3-address}
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#envoy-v3-api-msg-config-core-v3-address config.core.v3.Address}
              */
             listening_addresses?: Array<Address>
         }
         /**
-         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-locality}
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-locality config.core.v3.Locality}
          */
         export interface Locality {
             region?: string
@@ -318,28 +327,28 @@ export namespace config {
         }
         /**
          * @alpha
-         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-buildversion}
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-buildversion config.core.v3.BuildVersion}
          */
         export interface BuildVersion { }
         /**
          * @alpha
-         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-extension}
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-extension config.core.v3.Extension}
          */
         export interface Extension { }
 
         /**
          * @alpha
-         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/config_source.proto#envoy-v3-api-msg-config-core-v3-apiconfigsource}
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/config_source.proto#envoy-v3-api-msg-config-core-v3-apiconfigsource config.core.v3.ApiConfigSource}
          */
         export interface ApiConfigSource { }
         /**
          * @alpha
-         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/config_source.proto#envoy-v3-api-msg-config-core-v3-configsource}
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/config_source.proto#envoy-v3-api-msg-config-core-v3-configsource config.core.v3.ConfigSource}
          */
         export interface ConfigSource { }
         /**
          * @alpha
-         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/extension.proto#envoy-v3-api-msg-config-core-v3-typedextensionconfig}
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/extension.proto#envoy-v3-api-msg-config-core-v3-typedextensionconfig config.core.v3.TypedExtensionConfig}
          */
         export interface TypedExtensionConfig { }
 
@@ -347,13 +356,13 @@ export namespace config {
     export namespace overload.v3 {
         /**
          * @alpha
-         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/overload/v3/overload.proto#envoy-v3-api-msg-config-overload-v3-overloadmanager}
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/overload/v3/overload.proto#envoy-v3-api-msg-config-overload-v3-overloadmanager config.overload.v3.OverloadManager}
          */
         export interface OverloadManager { }
     }
     export namespace metrics.v3 {
         /**
-         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/metrics/v3/stats.proto#envoy-v3-api-msg-config-metrics-v3-statssink}
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/metrics/v3/stats.proto#envoy-v3-api-msg-config-metrics-v3-statssink config.metrics.v3.StatsSink}
          */
         export interface StatsSink {
             name?: string
@@ -361,14 +370,14 @@ export namespace config {
         }
         /**
          * @@alpha
-         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/metrics/v3/stats.proto#envoy-v3-api-msg-config-metrics-v3-statsconfig}
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/metrics/v3/stats.proto#envoy-v3-api-msg-config-metrics-v3-statsconfig config.metrics.v3.StatsConfig}
          */
         export interface StatsConfig { }
     }
     export namespace trace.v3 {
         /**
          * @alpha
-         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/trace/v3/http_tracer.proto#envoy-v3-api-msg-config-trace-v3-tracing} 
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/trace/v3/http_tracer.proto#envoy-v3-api-msg-config-trace-v3-tracing config.trace.v3.Tracing} 
          */
         export interface Tracing { }
     }
