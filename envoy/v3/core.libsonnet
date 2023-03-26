@@ -20,6 +20,7 @@ local dynamic_path(opts) = {
       path: opts.dir,
     },
   },
+  resource_api_version: 'V3',
 };
 // 創建 config.core.v3 對象
 {
