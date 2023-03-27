@@ -41,14 +41,14 @@ export namespace config {
             export interface StaticResources {
                 /**
                  * 靜態監聽器。 無論 LDS 配置如何，這些偵聽器都可用。
-                 * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener.proto#envoy-v3-api-msg-config-listener-v3-listener config.core.v3.Listener}
+                 * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener.proto#envoy-v3-api-msg-config-listener-v3-listener config.listener.v3.Listener}
                  */
-                listeners?: Array<config.core.v3.Listener>
+                listeners?: Array<config.listener.v3.Listener>
                 /**
                  * 如果為 cds_config 指定了基於網絡的配置源，則有必要提供一些初始集群定義，以允許 Envoy 知道如何與管理服務器通信。 這些集群定義可能不使用 EDS（即它們應該是靜態 IP 或基於 DNS）
-                 * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster config.core.v3.Cluster}
+                 * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster config.cluster.v3.Cluster}
                  */
-                clusters?: Array<config.core.v3.Cluster>
+                clusters?: Array<config.cluster.v3.Cluster>
                 /**
                  * SdsSecretConfig 可以使用這些靜態 secrets
                  * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/transport_sockets/tls/v3/secret.proto#envoy-v3-api-msg-extensions-transport-sockets-tls-v3-secret extensions.transport_sockets.tls.v3.Secret}
@@ -405,7 +405,7 @@ export namespace config {
             /**
              * 資源超時時間
              * 
-             * @defaultValue 15000
+             * @defaultValue 15s
              * @remarks
              * 指定此超時後，Envoy 將在初始化過程中等待此 xDS 訂閱上的第一個配置響應的指定時間不超過指定時間。
              *  達到超時後，Envoy 將進入下一個初始化階段，即使第一個配置尚未交付。
@@ -413,7 +413,7 @@ export namespace config {
              * 0 表示沒有超時 - Envoy 將無限期地等待第一個 xDS 配置（除非另一個超時適用）。 默認為 15 秒
              * {@link https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#duration Duration}
              */
-            initial_fetch_timeout?: number
+            initial_fetch_timeout?: string
             /**
              * xDS 資源的 API 版本。 
              * 
@@ -473,66 +473,559 @@ export namespace config {
 
         /**
          * @alpha
-         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener.proto#envoy-v3-api-msg-config-listener-v3-listener config.core.v3.Listener}
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-metadata config.core.v3.Metadata}
          */
-        export interface Listener {
+        export interface Metadata { }
+        /**
+         * * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-transportsocket config.core.v3.TransportSocket}
+         */
+        export interface TransportSocket {
+            /**
+             * 要實例化的傳輸套接字的名稱。 該名稱必須與受支持的傳輸套接字實現相匹配。
+             */
+            name: string
+            /**
+             * 特定於實現的配置取決於正在實例化的實現。 請參閱支持的傳輸套接字實現以獲取更多文檔。
+             */
+            typed_config: any
         }
         /**
          * @alpha
-         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster config.core.v3.Cluster}
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#envoy-v3-api-msg-config-core-v3-bindconfig config.core.v3.BindConfig}
+         */
+        export interface BindConfig { }
+
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/protocol.proto#envoy-v3-api-msg-config-core-v3-http2protocoloptions config.core.v3.Http2ProtocolOptions}
+         */
+        export interface Http2ProtocolOptions { }
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/protocol.proto#envoy-v3-api-msg-config-core-v3-http1protocoloptions config.core.v3.Http1ProtocolOptions}
+         */
+        export interface Http1ProtocolOptions { }
+
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/protocol.proto#envoy-v3-api-msg-config-core-v3-httpprotocoloptions config.core.v3.HttpProtocolOptions}
+         */
+        export interface HttpProtocolOptions { }
+
+        /**
+         * @alpha
+         *  {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/protocol.proto#envoy-v3-api-msg-config-core-v3-upstreamhttpprotocoloptions config.core.v3.UpstreamHttpProtocolOptions}
+         */
+        export interface UpstreamHttpProtocolOptions { }
+
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/health_check.proto#envoy-v3-api-msg-config-core-v3-healthcheck config.core.v3.HealthCheck}
+         */
+        export interface HealthCheck { }
+    }
+    export namespace endpoint.v3 {
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/endpoint/v3/endpoint.proto#envoy-v3-api-msg-config-endpoint-v3-clusterloadassignment config.endpoint.v3.ClusterLoadAssignment}
+         */
+        export interface ClusterLoadAssignment { }
+    }
+    export namespace listener.v3 {
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener.proto#envoy-v3-api-msg-config-listener-v3-listener config.listener.v3.Listener}
+         */
+        export interface Listener {
+        }
+    }
+    export namespace cluster.v3 {
+        export namespace Cluster {
+            /**
+             * @alpha
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster-commonlbconfig config.cluster.v3.Cluster.CommonLbConfig}
+             */
+            export interface CommonLbConfig { }
+
+            /**
+             * @alpha
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster-roundrobinlbconfig config.cluster.v3.Cluster.RoundRobinLbConfig}
+             */
+            export interface RoundRobinLbConfig { }
+
+            /**
+             * @alpha
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster-leastrequestlbconfig config.cluster.v3.Cluster.LeastRequestLbConfig}
+             */
+            export interface LeastRequestLbConfig { }
+            /**
+             * @alpha
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster-originaldstlbconfig config.cluster.v3.Cluster.OriginalDstLbConfig}
+             */
+            export interface OriginalDstLbConfig { }
+            /**
+             * @alpha
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster-maglevlbconfig config.cluster.v3.Cluster.MaglevLbConfig}
+             */
+            export interface MaglevLbConfig { }
+            /**
+             * @alpha
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster-ringhashlbconfig config.cluster.v3.Cluster.RingHashLbConfig}
+             */
+            export interface RingHashLbConfig { }
+            /**
+             * @alpha
+             *  {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster-lbsubsetconfig config.cluster.v3.Cluster.LbSubsetConfig}
+             */
+            export interface LbSubsetConfig { }
+
+            /**
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-enum-config-cluster-v3-cluster-dnslookupfamily config.cluster.v3.Cluster.DnsLookupFamily}
+             */
+            export type DnsLookupFamily = 'AUTO' | 'V4_ONLY' | 'V6_ONLY' | 'V4_PREFERRED' | 'ALL'
+
+            /**
+             * @alpha
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster-refreshrate config.cluster.v3.Cluster.RefreshRate}
+             */
+            export interface RefreshRate { }
+
+            /**
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-enum-config-cluster-v3-cluster-lbpolicy config.cluster.v3.Cluster.LbPolicy}
+             */
+            export type LbPolicy = 'ROUND_ROBIN' | 'LEAST_REQUEST' | 'RING_HASH' | 'RANDOM' | 'MAGLEV' | 'CLUSTER_PROVIDED' | 'LOAD_BALANCING_POLICY_CONFIG'
+
+            /**
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster-edsclusterconfig config.cluster.v3.Cluster.EdsClusterConfig}
+             */
+            export interface EdsClusterConfig {
+                /**
+                 * 此集群的 EDS 更新源的配置
+                 * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster-edsclusterconfig config.core.v3.ConfigSource}
+                 */
+                eds_config?: Array<config.core.v3.ConfigSource>
+                /**
+                 * 集群名稱的可選替代方案，以呈現給 EDS。 這與集群名稱沒有相同的限制，即它可以是任意長度。 這可能是一個 xdstp:// URL。
+                 */
+                service_name?: string
+            }
+            /**
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster-customclustertype config.cluster.v3.Cluster.CustomClusterType}
+             */
+            export interface CustomClusterType {
+                /**
+                 * 要實例化的集群類型。 該名稱必須與受支持的集群類型相匹配
+                 */
+                name: string
+                /**
+                 * 集群特定配置取決於正在實例化的集群
+                 */
+                typed_config?: any
+            }
+            /**
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-enum-config-cluster-v3-cluster-discoverytype config.cluster.v3.Cluster.DiscoveryType}
+             */
+            export type DiscoveryType = 'STATIC' | 'STRICT_DNS' | 'LOGICAL_DNS' | 'EDS' | 'ORIGINAL_DST'
+
+            /**
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster-transportsocketmatch config.cluster.v3.Cluster.TransportSocketMatch}
+             */
+            export interface TransportSocketMatch {
+                /**
+                 * 匹配的名稱，用於統計生成
+                 */
+                name: string
+                /**
+                 * 可選端點元數據匹配條件
+                 */
+                match?: Record<string, any>
+                /**
+                 * 傳輸 socket 的配置
+                 * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-transportsocket config.core.v3.TransportSocket}
+                 */
+                transport_socket?: config.core.v3.TransportSocket
+            }
+        }
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster config.cluster.v3.Cluster}
          */
         export interface Cluster {
-            // "transport_socket_matches": [],
-            // "name": ...,
-            // "alt_stat_name": ...,
-            // "type": ...,
-            // "cluster_type": {...},
-            // "eds_cluster_config": {...},
-            // "connect_timeout": {...},
-            // "per_connection_buffer_limit_bytes": {...},
-            // "lb_policy": ...,
-            // "load_assignment": {...},
-            // "health_checks": [],
-            // "max_requests_per_connection": {...},
-            // "circuit_breakers": {...},
-            // "upstream_http_protocol_options": {...},
-            // "common_http_protocol_options": {...},
-            // "http_protocol_options": {...},
-            // "http2_protocol_options": {...},
-            // "typed_extension_protocol_options": {...},
-            // "dns_refresh_rate": {...},
-            // "dns_failure_refresh_rate": {...},
-            // "respect_dns_ttl": ...,
-            // "dns_lookup_family": ...,
-            // "dns_resolvers": [],
-            // "use_tcp_for_dns_lookups": ...,
-            // "dns_resolution_config": {...},
-            // "typed_dns_resolver_config": {...},
-            // "wait_for_warm_on_init": {...},
-            // "outlier_detection": {...},
-            // "cleanup_interval": {...},
-            // "upstream_bind_config": {...},
-            // "lb_subset_config": {...},
-            // "ring_hash_lb_config": {...},
-            // "maglev_lb_config": {...},
-            // "original_dst_lb_config": {...},
-            // "least_request_lb_config": {...},
-            // "round_robin_lb_config": {...},
-            // "common_lb_config": {...},
-            // "transport_socket": {...},
-            // "metadata": {...},
-            // "protocol_selection": ...,
-            // "upstream_connection_options": {...},
-            // "close_connections_on_host_health_failure": ...,
-            // "ignore_health_on_host_removal": ...,
-            // "filters": [],
-            // "load_balancing_policy": {...},
-            // "track_timeout_budgets": ...,
-            // "upstream_config": {...},
-            // "track_cluster_stats": {...},
-            // "preconnect_policy": {...},
-            // "connection_pool_per_downstream_connection": ...
+            /**
+             * 為不同的端點使用不同的傳輸套接字的配置
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster-transportsocketmatch config.cluster.v3.Cluster.TransportSocketMatch}
+             */
+            transport_socket_matches?: Array<config.cluster.v3.Cluster.TransportSocketMatch>
+            /**
+             * 提供在所有集群中必須唯一的集群名稱
+             */
+            name: string
+            /**
+             * 用於可觀察性的集群名稱的可選替代項
+             */
+            alt_stat_name?: string
+            /**
+             * 用於解析集群的服務發現類型
+             * 
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-enum-config-cluster-v3-cluster-discoverytype config.cluster.v3.Cluster.DiscoveryType}
+             */
+            type?: config.cluster.v3.Cluster.DiscoveryType
+            /**
+             * 自定義集群類型。
+             * 只能設置 type cluster_type 其中之一
+             * 
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster-customclustertype config.cluster.v3.Cluster.CustomClusterType}
+             */
+            cluster_type?: config.cluster.v3.Cluster.CustomClusterType
+            /**
+             * 用於集群的 EDS 更新的配置
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster-edsclusterconfig config.cluster.v3.Cluster.EdsClusterConfig}
+             */
+            eds_cluster_config?: config.cluster.v3.Cluster.EdsClusterConfig
+            /**
+             * 集群中主機的新網絡連接超時
+             * 
+             * @defaultValue 5s
+             * {@link https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#duration Duration}
+             */
+            connect_timeout?: string
+            /**
+             * uint32 對集群連接讀寫緩衝區大小的軟限制
+             * 
+             * defaultValue 1MB = 1024*1024
+             */
+            per_connection_buffer_limit_bytes?: number
+            /**
+             * 在集群中選擇主機時使用的負載均衡器類型
+             * 
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-enum-config-cluster-v3-cluster-lbpolicy config.cluster.v3.Cluster.LbPolicy}
+             */
+            lb_policy?: config.cluster.v3.Cluster.LbPolicy
+            /**
+             * 指定 STATIC、STRICT_DNS 或 LOGICAL_DNS 集群的成員
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/endpoint/v3/endpoint.proto#envoy-v3-api-msg-config-endpoint-v3-clusterloadassignment config.endpoint.v3.ClusterLoadAssignment}
+             */
+            load_assignment?: config.endpoint.v3.ClusterLoadAssignment
+            /**
+             * 主動健康檢查配置
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/health_check.proto#envoy-v3-api-msg-config-core-v3-healthcheck config.core.v3.HealthCheck}
+             */
+            health_checks?: Array<config.core.v3.HealthCheck>
+            /**
+             * uint32 單個上游連接的最大請求數。 
+             * 
+             * @remarks
+             * HTTP/1.1 和 HTTP/2 連接池實現都遵守此參數。
+             * 如果未指定，則沒有限制。 
+             * 將此參數設置為 1 將有效地禁用保持活動狀態
+             */
+            max_requests_per_connection?: number
+            /**
+             * 集群的可選斷路器
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/circuit_breaker.proto#envoy-v3-api-msg-config-cluster-v3-circuitbreakers config.cluster.v3.CircuitBreakers}
+             */
+            circuit_breakers?: config.cluster.v3.CircuitBreakers
+            /**
+             * 僅應用於上游 HTTP 連接的 HTTP 協議選項。 這些選項適用於所有 HTTP 版本
+             * 
+             * @deprecated 使用 http_protocol_options.upstream_http_protocol_options 設定，可以通過 {@link typed_extension_protocol_options} 設定 http_protocol_options
+             * 
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/protocol.proto#envoy-v3-api-msg-config-core-v3-upstreamhttpprotocoloptions config.core.v3.UpstreamHttpProtocolOptions}
+             */
+            upstream_http_protocol_options?: config.core.v3.UpstreamHttpProtocolOptions
+            /**
+             * 上游處理 HTTP 請求時的附加選項。 這些選項將適用於 HTTP1 和 HTTP2 請求
+             * 
+             * @deprecated 使用 http_protocol_options.common_http_protocol_options 設定，可以通過 {@link typed_extension_protocol_options} 設定 http_protocol_options
+             * 
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/protocol.proto#envoy-v3-api-msg-config-core-v3-httpprotocoloptions config.core.v3.HttpProtocolOptions}
+             */
+            common_http_protocol_options?: config.core.v3.HttpProtocolOptions
+            /**
+             * 處理 HTTP1 請求時的附加選項
+             * @deprecated 使用 http_protocol_options.http_protocol_options 設定，可以通過 {@link typed_extension_protocol_options} 設定 http_protocol_options
+             * 
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/protocol.proto#envoy-v3-api-msg-config-core-v3-http1protocoloptions config.core.v3.Http1ProtocolOptions}
+             */
+            http_protocol_options?: config.core.v3.Http1ProtocolOptions
+            /**
+             * 指定使用 http2 連接上游
+             * 
+             * @deprecated 使用 http_protocol_options.http2_protocol_options 設定，可以通過 {@link typed_extension_protocol_options} 設定 http_protocol_options
+             * 
+             * @example 對於不信任的上游應該設置如下字段
+             * 
+             * ```
+             * http2_protocol_options: {
+             *   initial_connection_window_size: 1048576,
+             *   initial_stream_window_size: 65536
+             * }
+             * ```
+             * 
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/protocol.proto#envoy-v3-api-msg-config-core-v3-http2protocoloptions config.core.v3.Http2ProtocolOptions}
+             */
+            http2_protocol_options?: config.core.v3.Http2ProtocolOptions
+            /**
+             * 為上游連接提供擴展特定的協議選項
+             * 
+             * @remarks
+             *  密鑰應與擴展過濾器名稱相匹配，例如 'envoy.filters.network.thrift_proxy'。
+             *  有關特定選項的詳細信息，請參閱擴展的文檔。
+             */
+            typed_extension_protocol_options?: Record<string, any>
+            /**
+             * 如果指定了 DNS 刷新率並且集群類型為 STRICT_DNS 或 LOGICAL_DNS，則此值用作集群的 DNS 刷新率。 配置的值必須至少為 1ms。
+             * 
+             * @defaultValue 5s
+             * 
+             * @remarks
+             * 對於 STRICT_DNS 和 LOGICAL_DNS 以外的集群類型，此設置將被忽略。
+             * 
+             * {@link https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#duration Duration}
+             */
+            dns_refresh_rate?: string
+            /**
+             * 如果指定了 DNS 故障刷新率並且集群類型為 STRICT_DNS 或 LOGICAL_DNS，則這將在請求失敗時用作集群的 DNS 刷新率。 
+             * 如果未指定此設置，則故障刷新率默認為 DNS 刷新率。 
+             * 對於 STRICT_DNS 和 LOGICAL_DNS 以外的集群類型，此設置將被忽略
+             * 
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster-refreshrate config.cluster.v3.Cluster.RefreshRate}
+             */
+            dns_failure_refresh_rate?: config.cluster.v3.Cluster.RefreshRate
+            /**
+             *  如果該值設置為 true，集群的 DNS 刷新率將設置為資源記錄的 TTL，該 TTL 來自 DNS 解析
+             */
+            respect_dns_ttl?: boolean
+            /**
+             * DNS IP地址解析策略。 如果未指定此設置
+             * 
+             * @defaultValue AUTO
+             * 
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-enum-config-cluster-v3-cluster-dnslookupfamily config.cluster.v3.Cluster.DnsLookupFamily}
+             */
+            dns_lookup_family?: config.cluster.v3.Cluster.DnsLookupFamily
+            /**
+             * 如果指定了 DNS 解析器並且集群類型為 STRICT_DNS 或 LOGICAL_DNS，則此值用於指定集群的 dns 解析器。 
+             * 如果未指定此設置，則該值默認為默認解析器
+             * 
+             * @deprecated 使用 {@link typed_dns_resolver_config} 替代
+             */
+            dns_resolvers?: Array<config.core.v3.Address>,
+            /**
+             * 始終使用 TCP 查詢而不是 UDP 查詢進行 DNS 查找
+             * @deprecated 使用 {@link typed_dns_resolver_config} 替代
+             */
+            use_tcp_for_dns_lookups?: boolean
+            /**
+             * DNS 解析配置，包括底層 DNS 解析器地址和選項
+             * 
+             * @deprecated 使用 {@link typed_dns_resolver_config} 替代
+             */
+            dns_resolution_config?: any
+            /**
+             * DNS 解析器類型配置擴展
+             * 
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/extension.proto#envoy-v3-api-msg-config-core-v3-typedextensionconfig config.core.v3.TypedExtensionConfig}
+             */
+            typed_dns_resolver_config?: config.core.v3.TypedExtensionConfig,
+            /**
+             * 如果為 true，集群就緒會在預熱時阻塞。 如果為 false，無論預熱是否完成，集群都將完成初始化。
+             *  
+             * @defaultValue true
+             * 
+             * @remarks
+             * 目前，僅適用於 {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-enum-value-config-cluster-v3-cluster-discoverytype-strict-dns STRICT_DNS} {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-enum-value-config-cluster-v3-cluster-discoverytype-logical-dns LOGICAL_DNS} 或 {@link https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/other_protocols/redis#arch-overview-redis Redis Cluster}
+             */
+            wait_for_warm_on_init?: boolean,
+            /**
+             * 如果指定，將為此上游集群啟用離群值檢測。 每個配置值都可以通過運行時值覆蓋。
+             * 
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/outlier_detection.proto#envoy-v3-api-msg-config-cluster-v3-outlierdetection config.cluster.v3.OutlierDetection}
+             */
+            outlier_detection?: config.cluster.v3.OutlierDetection
+            /**
+             * 從 ORIGINAL_DST 類型的集群中刪除陳舊主機的時間間隔(毫秒)
+             * 
+             * @defaultValue 5s
+             * 
+             * @remarks
+             * 如果在此時間間隔內未將主機用作上游目標，則主機被視為陳舊。 
+             * 隨著新連接被重定向到 Envoy，新主機按需添加到原始目標集群，導致集群中的主機數量隨著時間的推移而增長。
+             *  不陳舊的主機（它們被積極用作目的地）保留在集群中，這允許與它們的連接保持打開狀態，從而節省了打開新連接所花費的延遲。 
+             * 對於 ORIGINAL_DST 以外的集群類型，此設置將被忽略。
+             * 
+             * {@link https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#duration Duration}
+             */
+            cleanup_interval?: string
+            /**
+             * 用於綁定新建立的上游連接的可選配置
+             * 
+             * @remarks
+             *  這會覆蓋引導程序協議中指定的任何 bind_config。 
+             * 如果地址和端口為空，則不會執行任何綁定
+             * 
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#envoy-v3-api-msg-config-core-v3-bindconfig config.core.v3.BindConfig}
+             */
+            upstream_bind_config?: config.core.v3.BindConfig
+            /**
+             * 負載平衡子集的配置
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster-lbsubsetconfig config.cluster.v3.Cluster.LbSubsetConfig}
+             */
+            lb_subset_config?: config.cluster.v3.Cluster.LbSubsetConfig
+            /**
+             * Ring Hash 負載均衡策略的可選配置
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster-ringhashlbconfig config.cluster.v3.Cluster.RingHashLbConfig}
+             */
+            ring_hash_lb_config?: config.cluster.v3.Cluster.RingHashLbConfig
+            /**
+             * Maglev 負載均衡策略的可選配置
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster-maglevlbconfig config.cluster.v3.Cluster.MaglevLbConfig}
+             */
+            maglev_lb_config?: config.cluster.v3.Cluster.MaglevLbConfig
+            /**
+             * Original Destination 負載均衡策略的可選配置
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster-originaldstlbconfig config.cluster.v3.Cluster.OriginalDstLbConfig}
+             */
+            original_dst_lb_config?: config.cluster.v3.Cluster.OriginalDstLbConfig
+            /**
+             * LeastRequest 負載均衡策略的可選配置
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster-leastrequestlbconfig config.cluster.v3.Cluster.LeastRequestLbConfig}
+             */
+            least_request_lb_config?: config.cluster.v3.Cluster.LeastRequestLbConfig
+            /**
+             * RoundRobin 負載均衡策略的可選配置
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster-roundrobinlbconfig config.cluster.v3.Cluster.RoundRobin}
+             */
+            round_robin_lb_config?: config.cluster.v3.Cluster.RoundRobinLbConfig
+            /**
+             * 所有負載均衡器實現的通用配置
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster-commonlbconfig config.cluster.v3.Cluster.CommonLbConfig}
+             */
+            common_lb_config?: config.cluster.v3.Cluster.CommonLbConfig
+            /**
+             * 用於上游連接的可選自定義傳輸套接字實現
+             * 
+             * @remarks
+             * 例如使用 tls，name 需要設置爲 'envoy.transport_sockets.tls'， typed_config 設置爲 {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/transport_sockets/tls/v3/tls.proto#envoy-v3-api-msg-extensions-transport-sockets-tls-v3-upstreamtlscontext extensions.transport_sockets.tls.v3.UpstreamTlsContext}
+             * 
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-transportsocket config.core.v3.TransportSocket}
+             */
+            transport_socket?: config.core.v3.TransportSocket
+            /**
+             * 元數據字段可用於提供有關集群的附加信息
+             * @remarks
+             * 它可用於統計、日誌記錄和不同的過濾器行為。 
+             * 字段應使用反向 DNS 表示法來表示 Envoy 中的哪個實體將需要該信息。 
+             * 例如，如果元數據用於路由器過濾器，則過濾器名稱應指定為 envoy.filters.http.router。
+             * 
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-metadata config.core.v3.Metadata}
+             */
+            metadata?: config.core.v3.Metadata
+            /**
+             * @deprecated
+             */
+            protocol_selection?: any
+            /**
+             * 上游連接的可選選項
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-upstreamconnectionoptions config.cluster.v3.UpstreamConnectionOptions}
+             */
+            upstream_connection_options?: UpstreamConnectionOptions
+            /**
+             * 如果上游主機變得不健康（由配置的健康檢查或異常檢測確定），立即關閉與故障主機的所有連接。
+             */
+            close_connections_on_host_health_failure?: boolean
+            /**
+             * 如果設置為 true，Envoy 在處理從服務發現中移除主機時將忽略主機的健康值。 
+             * 這意味著如果使用主動健康檢查，Envoy 將不會等待端點變得不健康再將其刪除。
+             */
+            ignore_health_on_host_removal?: boolean,
+            /**
+             * 一個（可選的）網絡過濾器鏈，按照過濾器的應用順序列出。 
+             * 該鏈將應用於 Envoy 與該集群的上游服務器建立的所有傳出連接。
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/filter.proto#envoy-v3-api-msg-config-cluster-v3-filter config.cluster.v3.Filter}}
+             */
+            filters?: Array<Filter>
+            /**
+             * 如果此字段已設置並受客戶端支持，它將取代 {@link lb_policy lb_policy} 的值。
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-loadbalancingpolicy config.cluster.v3.LoadBalancingPolicy}
+             */
+            load_balancing_policy?: LoadBalancingPolicy
+            /**
+             * @deprecated 使用 {@link track_cluster_stats} 替代
+             */
+            track_timeout_budgets?: boolean
+            /**
+             * 上游連接池和上游類型的可選定制和配置
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/extension.proto#envoy-v3-api-msg-config-core-v3-typedextensionconfig config.core.v3.TypedExtensionConfig}
+             */
+            upstream_config?: config.core.v3.TypedExtensionConfig
+            /**
+             * 跟踪可選集群統計信息的配置
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-trackclusterstats config.cluster.v3.TrackClusterStats}
+             */
+            track_cluster_stats?: TrackClusterStats
+            /**
+             * 此集群的預連接配置
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster-preconnectpolicy config.cluster.v3.PreconnectPolicy} 
+             */
+            preconnect_policy?: PreconnectPolicy,
+            /**
+             * 如果爲 true，集群將爲每個下游連接使用一個單獨的連接池
+             */
+            connection_pool_per_downstream_connection?: boolean
         }
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster-preconnectpolicy config.cluster.v3.PreconnectPolicy}
+         */
+        export interface PreconnectPolicy { }
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-trackclusterstats config.cluster.v3.TrackClusterStats}
+         */
+        export interface TrackClusterStats { }
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-loadbalancingpolicy config.cluster.v3.LoadBalancingPolicy}
+         */
+        export interface LoadBalancingPolicy { }
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-trackclusterstats config.cluster.v3.TrackClusterStats}
+         */
+        export interface TrackClusterStats { }
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/filter.proto#envoy-v3-api-msg-config-cluster-v3-filter config.cluster.v3.Filter}
+         */
+        export interface Filter {
+            /**
+             * 過濾器名稱
+             */
+            name: string
+            /**
+             * (任何)過濾器特定配置取決於正在實例化的過濾器。 請參閱支持的過濾器以獲取更多文檔。
+             * 
+             * @remarks
+             * 請注意，Envoy 的下游網絡過濾器不是有效的上游過濾器
+             */
+            typed_config: any
+        }
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-upstreamconnectionoptions config.cluster.v3.UpstreamConnectionOptions}
+         */
+        export interface UpstreamConnectionOptions { }
+
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/outlier_detection.proto#envoy-v3-api-msg-config-cluster-v3-outlierdetection config.cluster.v3.OutlierDetection}
+         */
+        export interface OutlierDetection { }
+
+        /**
+         * @alpha
+         *  {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/circuit_breaker.proto#envoy-v3-api-msg-config-cluster-v3-circuitbreakers config.cluster.v3.CircuitBreakers}
+         */
+        export interface CircuitBreakers { }
     }
     export namespace overload.v3 {
         /**
@@ -618,11 +1111,11 @@ export interface Envoy {
      * 只能設置 stats_flush_interval 或 stats_flush_on_admin 之一。 
      * 持續時間必須至少為 1 毫秒，最多為 5 分鐘。
      * 
-     * @defaultValue 5000
+     * @defaultValue 5s
      * 
      * {@link https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#duration Duration}
      */
-    stats_flush_interval?: number
+    stats_flush_interval?: string
     /**
      * 僅當在管理界面上查詢時才將統計信息刷新到接收器
      * @remarks
