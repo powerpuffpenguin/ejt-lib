@@ -4,6 +4,7 @@ local cluster(opts) = {
   connect_timeout: '5s',
   type: 'STRICT_DNS',
   name: opts.name,
+  [if std.objectHas(opts, 'extensions') then 'typed_extension_protocol_options']: opts.extensions,
   // config.endpoint.v3.ClusterLoadAssignment
   load_assignment: utils.get_default(opts, 'default_load_assignment', {}) {
     cluster_name: opts.name,
@@ -27,6 +28,18 @@ local cluster(opts) = {
 local cds(opts) = cluster(opts) {
   '@type': 'type.googleapis.com/envoy.config.cluster.v3.Cluster',
 };
+// extensions.upstreams.http.v3.HttpProtocolOptions
+// https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/upstreams/http/v3/http_protocol_options.proto#envoy-v3-api-field-extensions-upstreams-http-v3-httpprotocoloptions-upstream-http-protocol-options
+local upstreams_http(opts) = {
+  'envoy.extensions.upstreams.http.v3.HttpProtocolOptions': {
+    '@type': 'type.googleapis.com/envoy.extensions.upstreams.http.v3.HttpProtocolOptions',
+  } + opts,
+};
+local explicit_http2(opts) = {
+  explicit_http_config: {
+    http2_protocol_options: opts,
+  },
+};
 // 創建 config.cluster.v3 對象
 {
   // 如何解析發現上游服務器
@@ -47,6 +60,7 @@ local cds(opts) = cluster(opts) {
   // 創建 config.cluster.v3.Cluster 上游集群
   // - name: string 集群名稱
   // - endpoints: Array<string> host:port
+  // - extensions?: typed_extension_protocol_options
   // - default_load_assignment?: config.endpoint.v3.ClusterLoadAssignment
   // - default_lb_endpoints ?: config.endpoint.v3.LocalityLbEndpoints
   // - default_lb_endpoint?: config.endpoint.v3.LbEndpoint
@@ -54,9 +68,17 @@ local cds(opts) = cluster(opts) {
   cds(opts): cds(opts),
   // 創建 config.cluster.v3.Cluster 上游集群
   // - name: string 集群名稱
+  // - extensions?: typed_extension_protocol_options
   // - default_load_assignment?: config.endpoint.v3.ClusterLoadAssignment
   // - default_lb_endpoints ?: config.endpoint.v3.LocalityLbEndpoints
   // - default_lb_endpoint?: config.endpoint.v3.LbEndpoint
   // - default_endpoint?: config.endpoint.v3.Endpoint
   cluster(opts): cluster(opts),
+
+  // 創建 extensions.upstreams.http.v3.HttpProtocolOptions
+  // - default?: HttpProtocolOptions
+  upstreams_http(opts): upstreams_http(opts),
+  // 創建 extensions.upstreams.http.v3.HttpProtocolOptions.explicit_http_config 並且設置 http2_protocol_options
+  // - opts?: config.core.v3.Http2ProtocolOptions
+  explicit_http2(opts): explicit_http2(opts),
 }

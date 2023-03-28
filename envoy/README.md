@@ -132,6 +132,7 @@ cluster.cds 函數創建一個
 
 - **name** 指定集群的名稱
 - **endpoints** 集群包含的端點列表，字符串格式爲 host:port
+- **extensions?** 設置 typed_extension_protocol_options 屬性
 - **default_load_assignment?**
   [config.endpoint.v3.ClusterLoadAssignment](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/endpoint/v3/endpoint.proto#envoy-v3-api-msg-config-endpoint-v3-clusterloadassignment)
 - **default_lb_endpoints?**
