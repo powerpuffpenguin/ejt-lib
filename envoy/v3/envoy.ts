@@ -523,13 +523,152 @@ export namespace config {
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/health_check.proto#envoy-v3-api-msg-config-core-v3-healthcheck config.core.v3.HealthCheck}
          */
         export interface HealthCheck { }
+
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/health_check.proto#envoy-v3-api-enum-config-core-v3-healthstatus config.core.v3.HealthStatus}
+         */
+        export type HealthStatus = 'UNKNOWN' | 'HEALTHY' | 'UNHEALTHY' | 'DRAINING' | 'TIMEOUT' | 'DEGRADED'
     }
     export namespace endpoint.v3 {
+        export namespace Endpoint {
+            /**
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/endpoint/v3/endpoint_components.proto#envoy-v3-api-msg-config-endpoint-v3-endpoint-healthcheckconfig config.endpoint.v3.Endpoint.HealthCheckConfig}
+             */
+            export interface HealthCheckConfig {
+                /**
+                 * uint32 可選的替代健康檢查端口值
+                 * 
+                 * @remarks
+                 * 默認情況下，上游主機的健康檢查地址端口與主機的服務地址端口相同。 這提供了一個替代的健康檢查端口。 將此設置為非零值允許上游主機具有不同的健康檢查地址端口。
+                 */
+                port_value?: number
+                /**
+                 * 默認情況下，用於 L7 健康檢查的主機標頭由集群級別配置控制（請參閱：主機和權限）。
+                 */
+                hostname?: string
+                /**
+                 * 可選的替代健康檢查主機地址
+                 * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#envoy-v3-api-msg-config-core-v3-address config.core.v3.Address}
+                 */
+                address?: config.core.v3.Address
+                /**
+                 * 用於控制是否為此端點執行主動健康檢查的可選標誌。 
+                 * 如果有健康檢查器，則默認啟用主動健康檢查。 
+                 */
+                disable_active_health_check?: boolean
+            }
+        }
+        export namespace ClusterLoadAssignment {
+            /**
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/endpoint/v3/endpoint.proto#envoy-v3-api-msg-config-endpoint-v3-clusterloadassignment-policy config.endpoint.v3.ClusterLoadAssignment.Policy}
+             */
+            export interface Policy {
+                /**
+                 * uint32 優先級和位置被認為是這個因素（以百分比表示）的過度配置。
+                 * 這意味著在健康主機的比例乘以過度配置因子下降到 100 以下之前，我們不會認為優先級或位置不健康。
+                 * 使用默認值 140(1.4)
+                 */
+                overprovisioning_factor?: number
+                /**
+                 * 可以使用此分配的端點的最長時間。 如果在此時間到期之前沒有收到新的分配，則端點將被視為過時並應標記為不健康。 默認為 0，這意味著端點永遠不會過時。
+                 * 
+                 * {@link https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#duration Duration}
+                 */
+                endpoint_stale_after?: string
+            }
+        }
         /**
          * @alpha
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/endpoint/v3/endpoint.proto#envoy-v3-api-msg-config-endpoint-v3-clusterloadassignment config.endpoint.v3.ClusterLoadAssignment}
          */
-        export interface ClusterLoadAssignment { }
+        export interface ClusterLoadAssignment {
+            /**
+             * 集群名稱
+             */
+            cluster_name: string
+            /**
+             * 要進行負載均衡的端點列表
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/endpoint/v3/endpoint_components.proto#envoy-v3-api-msg-config-endpoint-v3-localitylbendpoints config.endpoint.v3.LocalityLbEndpoints}
+             */
+            endpoints?: Array<LocalityLbEndpoints>
+            /**
+             * 負載均衡策略
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/endpoint/v3/endpoint.proto#envoy-v3-api-msg-config-endpoint-v3-clusterloadassignment-policy config.endpoint.v3.ClusterLoadAssignment.Policy}
+             */
+            policy?: config.endpoint.v3.ClusterLoadAssignment.Policy
+        }
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/endpoint/v3/endpoint_components.proto#envoy-v3-api-msg-config-endpoint-v3-localitylbendpoints config.endpoint.v3.LocalityLbEndpoints}
+         */
+        export interface LocalityLbEndpoints {
+            /**
+             * 標識上游主機的運行位置
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-locality config.core.v3.Locality}
+             */
+            locality?: config.core.v3.Locality
+            /**
+             * 指定端點數組
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/endpoint/v3/endpoint_components.proto#envoy-v3-api-msg-config-endpoint-v3-lbendpoint config.endpoint.v3.LbEndpoint}
+             */
+            lb_endpoints?: Array<config.endpoint.v3.LbEndpoint>
+            /**
+             * 每個優先級/區域/區域/子區域權重
+             */
+            load_balancing_weight?: number
+            /**
+             * 此 LocalityLbEndpoints 的優先級。 如果未指定，這將默認為最高優先級 (0)
+             * 
+             * @remarks
+             * 通常情況下，Envoy 只會選擇最高優先級（0）的端點。 
+             * 如果特定優先級的所有端點都不可用/不健康，Envoy 將故障轉移到為下一個最高優先級組選擇端點。
+             */
+            priority?: number
+        }
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/endpoint/v3/endpoint_components.proto#envoy-v3-api-msg-config-endpoint-v3-lbendpoint config.endpoint.v3.LbEndpoint}
+         */
+        export interface LbEndpoint {
+            /**
+             * 上游主機標識符或命名引用
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/endpoint/v3/endpoint_components.proto#envoy-v3-api-msg-config-endpoint-v3-endpoint config.endpoint.v3.Endpoint}
+             */
+            endpoint?: Endpoint
+            /**
+             * EDS 服務器已知和提供的可選健康狀態
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/health_check.proto#envoy-v3-api-enum-config-core-v3-healthstatus config.core.v3.HealthStatus}
+             */
+            health_status?: config.core.v3.HealthStatus
+            /**
+             * 端點元數據指定負載均衡器可以用來為給定請求選擇集群中的端點的值。 過濾器名稱應指定為 envoy.lb。 示例布爾鍵值對是金絲雀，提供上游主機的可選金絲雀狀態
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-metadata config.core.v3.Metadata}
+             */
+            metadata?: config.core.v3.Metadata
+            /**
+             * uint32 上游主機的可選負載均衡權重
+             */
+            load_balancing_weight?: number
+        }
+        /**
+         * {@link {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/endpoint/v3/endpoint_components.proto#envoy-v3-api-msg-config-endpoint-v3-endpoint config.endpoint.v3.Endpoint}}
+         */
+        export interface Endpoint {
+            /**
+             * 上游地址
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#envoy-v3-api-msg-config-core-v3-address core.v3.Address}
+             */
+            address?: core.v3.Address
+
+            /**
+             * 健康檢查配置
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/endpoint/v3/endpoint_components.proto#envoy-v3-api-msg-config-endpoint-v3-endpoint-healthcheckconfig config.endpoint.v3.Endpoint.HealthCheckConfig}
+             */
+            health_check_config?: config.endpoint.v3.Endpoint.HealthCheckConfig
+            /**
+             * 與此端點關聯的 hostname。 此 hostname 不用於路由或地址解析。 
+             * 如果提供，它將與端點相關聯，並可用於需要 hostname 的功能，如 auto_host_rewrite
+             */
+            hostname?: string
+        }
     }
     export namespace listener.v3 {
         /**
