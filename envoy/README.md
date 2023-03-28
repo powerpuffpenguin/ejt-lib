@@ -1,8 +1,8 @@
 # envoy
 
 - [init](#init)
-- [envoy.jsonnet](#envoy.jsonnet)
-- [cds.jsonnet](#cds.jsonnet)
+- [envoy](#envoy)
+- [cds](#cds)
 
 # init
 
@@ -46,7 +46,7 @@
     - cds.jsonnet 這是後端服務
     - lds.jsonnet 這是監聽器
 
-# envoy.jsonnet
+# envoy
 
 envoy.jsonnet 會被轉換爲 envoy.yaml 作爲 envoy 的主要設定，它通常長這樣:
 
@@ -100,7 +100,7 @@ local core = import 'envoy/v3/core.libsonnet';
 - admin 在 8000 端口配置了一個管理服務器，以及將管理日誌輸出到 stdout
 - dynamic_resources 定義了從檔案動態加載監聽器和後端集群
 
-# cds.jsonnet
+# cds
 
 cds.jsonnet 會被轉換爲 cds.yaml 作爲 envoy 的
 [CDS](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/bootstrap/v3/bootstrap.proto#envoy-v3-api-field-config-bootstrap-v3-bootstrap-dynamicresources-cds-config)
@@ -108,36 +108,47 @@ cds.jsonnet 會被轉換爲 cds.yaml 作爲 envoy 的
 
 ```
 local cluster = import 'envoy/v3/cluster.libsonnet';
+local core = import 'envoy/v3/core.libsonnet';
 {
   resources: [
     cluster.cds(
       {
-        name: 'web_cluster',
+        name: 'web_http',
         endpoints: ['httptest:80'],
+        // config.core.v3.Http1ProtocolOptions
+        // https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/protocol.proto#envoy-v3-api-msg-config-core-v3-http1protocoloptions
+        extensions: cluster.explicit_http({}),
       },
     ),
     cluster.cds(
       {
-        name: 'web_google',
-        endpoints: ['www.google.com:80'],
+        name: 'web_h2c',
+        endpoints: ['httptest:80'],
+        // config.core.v3.Http2ProtocolOptions
+        // https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/protocol.proto#envoy-v3-api-msg-config-core-v3-http2protocoloptions
+        extensions: cluster.explicit_http2({}),
+      },
+    ),
+    cluster.cds(
+      {
+        name: 'web_https',
+        endpoints: ['httptest:443'],
+        // envoy.transport_sockets.tls typed_config
+        // https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/transport_sockets/tls/v3/tls.proto
+        transport_socket: cluster.transport_sockets_tls({}),
+        extensions: cluster.explicit_http({}),
+      },
+    ),
+    cluster.cds(
+      {
+        name: 'web_h2',
+        endpoints: ['httptest:443'],
+        transport_socket: cluster.transport_sockets_tls({}),
+        extensions: cluster.explicit_http2({}),
       },
     ),
   ],
 }
 ```
 
-cluster.cds 函數創建一個
-[config.cluster.v3.Cluster](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster)
-它接受多個參數
-
-- **name** 指定集群的名稱
-- **endpoints** 集群包含的端點列表，字符串格式爲 host:port
-- **extensions?** 設置 typed_extension_protocol_options 屬性
-- **default_load_assignment?**
-  [config.endpoint.v3.ClusterLoadAssignment](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/endpoint/v3/endpoint.proto#envoy-v3-api-msg-config-endpoint-v3-clusterloadassignment)
-- **default_lb_endpoints?**
-  [config.endpoint.v3.LocalityLbEndpoints](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/endpoint/v3/endpoint_components.proto#envoy-v3-api-msg-config-endpoint-v3-localitylbendpoints)
-- **default_lb_endpoint?**
-  [config.endpoint.v3.LbEndpoint](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/endpoint/v3/endpoint_components.proto#envoy-v3-api-msg-config-endpoint-v3-lbendpoint)
-- **default_endpoint?**
-  [config.endpoint.v3.Endpoint](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/endpoint/v3/endpoint_components.proto#envoy-v3-api-msg-config-endpoint-v3-endpoint)
+上面例子定義了四個集群，分別使用 http1.1/h2c/https1.1/h2 連接上游的集群

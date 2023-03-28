@@ -4,6 +4,7 @@ local cluster(opts) = {
   connect_timeout: '5s',
   type: 'STRICT_DNS',
   name: opts.name,
+  [if std.objectHas(opts, 'transport_socket') then 'transport_socket']: opts.transport_socket,
   [if std.objectHas(opts, 'extensions') then 'typed_extension_protocol_options']: opts.extensions,
   // config.endpoint.v3.ClusterLoadAssignment
   load_assignment: utils.get_default(opts, 'default_load_assignment', {}) {
@@ -36,8 +37,12 @@ local upstreams_http(opts) = {
   } + opts,
 };
 local explicit_http2(opts) = {
-  explicit_http_config: {
-    http2_protocol_options: opts,
+  'envoy.extensions.upstreams.http.v3.HttpProtocolOptions': {
+    '@type': 'type.googleapis.com/envoy.extensions.upstreams.http.v3.HttpProtocolOptions',
+    explicit_http_config: {
+      assert std.isObject(opts) : 'explicit_http2(config.core.v3.Http2ProtocolOptions)',
+      http2_protocol_options: opts,
+    },
   },
 };
 // 創建 config.cluster.v3 對象
@@ -61,6 +66,7 @@ local explicit_http2(opts) = {
   // - name: string 集群名稱
   // - endpoints: Array<string> host:port
   // - extensions?: typed_extension_protocol_options
+  // - transport_socket? config.core.v3.TransportSocket
   // - default_load_assignment?: config.endpoint.v3.ClusterLoadAssignment
   // - default_lb_endpoints ?: config.endpoint.v3.LocalityLbEndpoints
   // - default_lb_endpoint?: config.endpoint.v3.LbEndpoint
@@ -76,9 +82,44 @@ local explicit_http2(opts) = {
   cluster(opts): cluster(opts),
 
   // 創建 extensions.upstreams.http.v3.HttpProtocolOptions
-  // - default?: HttpProtocolOptions
+  // - common_http_protocol_options?
+  // - upstream_http_protocol_options?
+  // - explicit_http_config?
+  // - use_downstream_protocol_config?
+  // - auto_config?
+  // - http_filters?
   upstreams_http(opts): upstreams_http(opts),
+
+  // 創建 extensions.upstreams.http.v3.HttpProtocolOptions.explicit_http_config 並且設置 http_protocol_options
+  // - opts?: config.core.v3.Http1ProtocolOptions
+  explicit_http(opts): upstreams_http({
+    explicit_http_config: {
+      assert std.isObject(opts) : 'explicit_http(config.core.v3.Http1ProtocolOptions)',
+      http_protocol_options: opts,
+    },
+  }),
   // 創建 extensions.upstreams.http.v3.HttpProtocolOptions.explicit_http_config 並且設置 http2_protocol_options
   // - opts?: config.core.v3.Http2ProtocolOptions
-  explicit_http2(opts): explicit_http2(opts),
+  explicit_http2(opts): upstreams_http({
+    explicit_http_config: {
+      assert std.isObject(opts) : 'explicit_http2(config.core.v3.Http2ProtocolOptions)',
+      http2_protocol_options: opts,
+    },
+  }),
+  // 創建 extensions.upstreams.http.v3.HttpProtocolOptions.explicit_http_config 並且設置 http2_protocol_options
+  // - opts?: config.core.v3.Http3ProtocolOptions
+  explicit_http3(opts): upstreams_http({
+    explicit_http_config: {
+      assert std.isObject(opts) : 'explicit_http3(config.core.v3.Http3ProtocolOptions)',
+      http3_protocol_options: opts,
+    },
+  }),
+
+  transport_sockets_tls(opts): {
+    name: 'envoy.transport_sockets.tls',
+    typed_config: {
+      '@type': 'type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext',
+    } + opts,
+  },
+
 }
