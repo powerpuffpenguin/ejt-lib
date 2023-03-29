@@ -113,7 +113,7 @@ local core = import 'envoy/v3/core.libsonnet';
   resources: [
     cluster.cds(
       {
-        name: 'web_http',
+        name: 'http_web',
         endpoints: ['httptest:80'],
         // config.core.v3.Http1ProtocolOptions
         // https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/protocol.proto#envoy-v3-api-msg-config-core-v3-http1protocoloptions
@@ -122,7 +122,7 @@ local core = import 'envoy/v3/core.libsonnet';
     ),
     cluster.cds(
       {
-        name: 'web_h2c',
+        name: 'h2c_web',
         endpoints: ['httptest:80'],
         // config.core.v3.Http2ProtocolOptions
         // https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/protocol.proto#envoy-v3-api-msg-config-core-v3-http2protocoloptions
@@ -131,7 +131,7 @@ local core = import 'envoy/v3/core.libsonnet';
     ),
     cluster.cds(
       {
-        name: 'web_https',
+        name: 'https_web',
         endpoints: ['httptest:443'],
         // envoy.transport_sockets.tls typed_config
         // https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/transport_sockets/tls/v3/tls.proto
@@ -141,7 +141,7 @@ local core = import 'envoy/v3/core.libsonnet';
     ),
     cluster.cds(
       {
-        name: 'web_h2',
+        name: 'h2_web',
         endpoints: ['httptest:443'],
         transport_socket: cluster.transport_sockets_tls({}),
         extensions: cluster.explicit_http2({}),
@@ -152,3 +152,30 @@ local core = import 'envoy/v3/core.libsonnet';
 ```
 
 上面例子定義了四個集群，分別使用 http1.1/h2c/https1.1/h2 連接上游的集群
+
+## auto_config
+
+對於 https 可以使用 ALPN 與上游進行協商自動判斷使用 http1/http2/http3 進行連接
+
+```
+local cluster = import 'envoy/v3/cluster.libsonnet';
+{
+  resources: [
+    cluster.cds(
+      {
+        name: 'https_web',
+        endpoints: ['httptest:443'],
+        transport_socket: cluster.transport_sockets_tls({}),
+        // https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/upstreams/http/v3/http_protocol_options.proto#extensions-upstreams-http-v3-httpprotocoloptions-autohttpconfig
+        extensions: cluster.auto_config({}),
+      },
+    ),
+  ],
+}
+```
+
+> 注意 http3 必須顯示設定才會啓用，所以上述配置只包含了 http1/http2 的自動識別
+>
+> 不推薦使用 auto_config，因爲envoy目前對於 http2 不支持 websocket，如果要使用
+> websocket 啓動了 auto_config，當服務器支持 h2 時會自動使用 h2 連接導致
+> websocket 無法正常工作

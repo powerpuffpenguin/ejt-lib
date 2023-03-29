@@ -74,7 +74,9 @@ local explicit_http2(opts) = {
   cds(opts): cds(opts),
   // 創建 config.cluster.v3.Cluster 上游集群
   // - name: string 集群名稱
+  // - endpoints: Array<string> host:port
   // - extensions?: typed_extension_protocol_options
+  // - transport_socket? config.core.v3.TransportSocket
   // - default_load_assignment?: config.endpoint.v3.ClusterLoadAssignment
   // - default_lb_endpoints ?: config.endpoint.v3.LocalityLbEndpoints
   // - default_lb_endpoint?: config.endpoint.v3.LbEndpoint
@@ -114,12 +116,21 @@ local explicit_http2(opts) = {
       http3_protocol_options: opts,
     },
   }),
+  // 創建 extensions.upstreams.http.v3.HttpProtocolOptions.auto_config
+  auto_config(opts): upstreams_http({
+    assert std.isObject(opts) : 'auto_config(extensions.upstreams.http.v3.HttpProtocolOptions.AutoHttpConfig)',
+    auto_config: opts,
+  }),
 
+  // 創建 envoy.transport_sockets.tls
+  // - opts extensions.transport_sockets.tls.v3.UpstreamTlsContext
+  //
+  // https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/transport_sockets/tls/v3/tls.proto#extensions-transport-sockets-tls-v3-upstreamtlscontext
   transport_sockets_tls(opts): {
     name: 'envoy.transport_sockets.tls',
     typed_config: {
+      assert std.isObject(opts) : 'transport_sockets_tls(extensions.transport_sockets.tls.v3.UpstreamTlsContext)',
       '@type': 'type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext',
     } + opts,
   },
-
 }
