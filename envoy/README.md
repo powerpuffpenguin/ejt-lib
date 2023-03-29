@@ -69,7 +69,11 @@ local core = import 'envoy/v3/core.libsonnet';
         // 這裏可以爲每個 監聽器設置單獨的連接上限
         listeners: [
           {
-            name: 'example_listener_name',
+            name: 'http_listener',
+            connections: 10000,
+          },
+          {
+            name: 'https_listener',
             connections: 10000,
           },
         ],
