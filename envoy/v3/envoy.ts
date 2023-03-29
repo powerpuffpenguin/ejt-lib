@@ -477,7 +477,52 @@ export namespace config {
         /**
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-virtualhost config.route.v3.VirtualHost}
          */
-        export interface VirtualHost { }
+        export interface VirtualHost {
+            /**
+             * 虛擬主機的邏輯名稱。 這在發出某些統計信息時使用，但與路由無關
+             */
+            name: string
+            /**
+             * 將與此虛擬主機匹配的域列表（主機/權限標頭）。
+             * 支持後綴或前綴形式的通配符主機
+             * @remarks
+             * 域搜索順序:
+             * - 準確的域名: www.foo.com
+             * - 後綴域通配符: *.foo.com 或 *-bar.foo.com
+             * - 前綴域通配符: foo.* 或 foo-*
+             * - 特殊通配符: * 匹配任何域
+             */
+            domains: Array<string>
+            /**
+             * 將按順序匹配傳入請求的路由列表。 將使用匹配的第一條路線
+             * @remarks
+             * 只能指定 routes 和 matcher 其中之一
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-route config.route.v3.Route}
+             */
+            routes?: Array<config.route.v3.Route>
+            // "matcher": {...},
+            // "require_tls": ...,
+            // "virtual_clusters": [],
+            // "rate_limits": [],
+            // "request_headers_to_add": [],
+            // "request_headers_to_remove": [],
+            // "response_headers_to_add": [],
+            // "response_headers_to_remove": [],
+            // "cors": {...},
+            // "typed_per_filter_config": {...},
+            // "include_request_attempt_count": ...,
+            // "include_attempt_count_in_response": ...,
+            // "retry_policy": {...},
+            // "hedge_policy": {...},
+            // "include_is_timeout_retry_header": ...,
+            // "per_request_buffer_limit_bytes": {...},
+            // "request_mirror_policies": []
+        }
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-route config.route.v3.Route}
+         */
+        export interface Route { }
         /**
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route.proto#envoy-v3-api-msg-config-route-v3-vhds config.route.v3.Vhds}
          */
