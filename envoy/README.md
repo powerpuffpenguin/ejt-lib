@@ -190,3 +190,38 @@ local cluster = import 'envoy/v3/cluster.libsonnet';
 lds.jsonnet 會被轉換爲 lds.yaml 作爲 envoy 的
 [LDS](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/operations/dynamic_configuration#arch-overview-dynamic-config-lds)
 資源用於動態指定監聽器，它通常長這樣:
+
+```
+local accesslog = import 'envoy/v3/accesslog.libsonnet';
+local core = import 'envoy/v3/core.libsonnet';
+local listener = import 'envoy/v3/listener.libsonnet';
+{
+  resources: [
+    listener.lds {
+      name: 'http_listener',
+      address: core.socket_address({ addr: ':80' }),
+      default_filter_chain: {
+        filters: [
+          // https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto#extension-envoy-filters-network-http-connection-manager
+          listener.http_connection_manager({
+            stat_prefix: 'http_ingress_default',
+            access_log: [accesslog.stdout_log],
+            // https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route.proto#envoy-v3-api-msg-config-route-v3-routeconfiguration
+            route_config: [
+
+            ],
+          }),
+        ],
+      },
+    },
+  ],
+}
+//  listener.lds {
+//       name: 'https_listener',
+//       address: core.socket_address({ addr: ':443' }),
+//       listener_filters: [
+//         // enable https
+//         listener.tls_inspector,
+//       ],
+//     },
+```
