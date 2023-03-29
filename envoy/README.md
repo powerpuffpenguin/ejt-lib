@@ -3,6 +3,7 @@
 - [init](#init)
 - [envoy](#envoy)
 - [cds](#cds)
+- [lds](#lds)
 
 # init
 
@@ -82,7 +83,7 @@ local core = import 'envoy/v3/core.libsonnet';
   },
   // 創建管理服務器
   admin: {
-    access_log: accesslog.stdout_log,
+    access_log: [accesslog.stdout_log],
     address: core.socket_address({
       addr: ':8000',
     }),
@@ -183,3 +184,9 @@ local cluster = import 'envoy/v3/cluster.libsonnet';
 > 不推薦使用 auto_config，因爲envoy目前對於 http2 不支持 websocket，如果要使用
 > websocket 啓動了 auto_config，當服務器支持 h2 時會自動使用 h2 連接導致
 > websocket 無法正常工作
+
+# lds
+
+lds.jsonnet 會被轉換爲 lds.yaml 作爲 envoy 的
+[LDS](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/operations/dynamic_configuration#arch-overview-dynamic-config-lds)
+資源用於動態指定監聽器，它通常長這樣:

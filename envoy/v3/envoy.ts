@@ -5,7 +5,504 @@ export namespace extensions.transport_sockets.tls.v3 {
      */
     export interface Secret { }
 }
+export namespace extensions.filters.network.http_connection_manager.v3 {
+    export namespace HttpConnectionManager {
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto#envoy-v3-api-msg-extensions-filters-network-http-connection-manager-v3-httpconnectionmanager-tracing extensions.filters.network.http_connection_manager.v3.HttpConnectionManager.Tracing}
+         */
+        export interface Tracing { }
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto#envoy-v3-api-msg-extensions-filters-network-http-connection-manager-v3-httpconnectionmanager-internaladdressconfig extensions.filters.network.http_connection_manager.v3.HttpConnectionManager.InternalAddressConfig}
+         */
+        export interface InternalAddressConfig {
+            /**
+             * unix socket 是否作爲內部地址
+             */
+            unix_sockets?: boolean
+            /**
+             * 被視為內部的 CIDR 範圍列表
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#envoy-v3-api-msg-config-core-v3-cidrrange config.core.v3.CidrRange}
+             */
+            cidr_ranges?: Array<config.core.v3.CidrRange>
+        }
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto#envoy-v3-api-enum-extensions-filters-network-http-connection-manager-v3-httpconnectionmanager-forwardclientcertdetails extensions.filters.network.http_connection_manager.v3.HttpConnectionManager.ForwardClientCertDetails}
+         */
+        export interface ForwardClientCertDetails { }
+        /**
+         * @alpha
+         *  {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto#envoy-v3-api-msg-extensions-filters-network-http-connection-manager-v3-httpconnectionmanager-setcurrentclientcertdetails extensions.filters.network.http_connection_manager.v3.HttpConnectionManager.SetCurrentClientCertDetails}
+         */
+        export interface SetCurrentClientCertDetails { }
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto#envoy-v3-api-msg-extensions-filters-network-http-connection-manager-v3-httpconnectionmanager-upgradeconfig extensions.filters.network.http_connection_manager.v3.HttpConnectionManager.UpgradeConfig}
+         */
+        export interface UpgradeConfig { }
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto#envoy-v3-api-msg-extensions-filters-network-http-connection-manager-v3-httpconnectionmanager-proxystatusconfig extensions.filters.network.http_connection_manager.v3.HttpConnectionManager.ProxyStatusConfig}
+         */
+        export interface ProxyStatusConfig { }
+    }
+    /**
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto#extensions-filters-network-http-connection-manager-v3-httpconnectionmanager extensions.filters.network.http_connection_manager.v3.HttpConnectionManager}
+     */
+    export interface HttpConnectionManager {
+        /**
+         * 提供連接器的編碼類型
+         * 
+         * @defaultValue 'AUTO'
+         */
+        codec_type?: 'AUTO' | 'HTTP1' | 'HTTP2'
+        /**
+         * 統計信息的人類可讀前綴
+         */
+        stat_prefix: string
+        /**
+         * 連接管理器的路由表將通過 RDS API 動態加載。
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto#envoy-v3-api-msg-extensions-filters-network-http-connection-manager-v3-rds extensions.filters.network.http_connection_manager.v3.Rds}
+         */
+        rds?: Rds
+        /**
+         * 連接管理器的路由表是靜態的，並在此屬性中指定
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route.proto#envoy-v3-api-msg-config-route-v3-routeconfiguration config.route.v3.RouteConfiguration}
+         */
+        route_config?: config.route.v3.RouteConfiguration
+        /**
+         * 路由表將根據請求屬性（例如，標頭的值）動態分配給每個請求
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto#envoy-v3-api-msg-extensions-filters-network-http-connection-manager-v3-scopedroutes extensions.filters.network.http_connection_manager.v3.ScopedRoutes}
+         */
+        scoped_routes?: ScopedRoutes
+        /**
+         * 組成對連接管理器的請求的過濾器鏈的單個 HTTP 過濾器的列表。 順序很重要，因為過濾器是在請求事件發生時按順序處理的
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto#envoy-v3-api-msg-extensions-filters-network-http-connection-manager-v3-httpfilter extensions.filters.network.http_connection_manager.v3.HttpFilter}
+         */
+        http_filters?: Array<HttpFilter>
+        /**
+         * 連接管理器是否操縱 :path 和 x-envoy-downstream-service-cluster 標頭
+         */
+        add_user_agent?: boolean
+        /**
+         * 對象的存在定義連接管理器是否向配置的跟踪提供程序發出跟踪數據。
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto#envoy-v3-api-msg-extensions-filters-network-http-connection-manager-v3-httpconnectionmanager-tracing extensions.filters.network.http_connection_manager.v3.HttpConnectionManager.Tracing}
+         */
+        tracing?: any
+        /**
+         * 連接管理器處理的 HTTP 請求的附加設置。 這些將適用於 HTTP1 和 HTTP2 請求。
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/protocol.proto#envoy-v3-api-msg-config-core-v3-httpprotocoloptions config.core.v3.HttpProtocolOptions}
+         */
+        common_http_protocol_options?: config.core.v3.HttpProtocolOptions
+        /**
+         * 傳遞給 HTTP/1 編解碼器的其他 HTTP/1 設置
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/protocol.proto#envoy-v3-api-msg-config-core-v3-http1protocoloptions config.core.v3.Http1ProtocolOptions}
+         */
+        http_protocol_options?: config.core.v3.Http1ProtocolOptions
+        /**
+         * 傳遞給 HTTP/2 編解碼器的其他 HTTP/2 設置。
+         * 
+         * @example 對於不信任的下游應該設置如下字段
+         * 
+         * ```
+         * http2_protocol_options: {
+         *   initial_connection_window_size: 1048576,
+         *   initial_stream_window_size: 65536
+         *   max_concurrent_streams: 100
+         * }
+         * ```
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/protocol.proto#envoy-v3-api-msg-config-core-v3-http2protocoloptions config.core.v3.Http2ProtocolOptions}
+         */
+        http2_protocol_options?: config.core.v3.Http2ProtocolOptions
+        /**
+         * 連接管理器將在響應中寫入服務器標頭的可選覆蓋
+         * @defaultValue 'envoy'
+         */
+        server_name?: string
+        /**
+         * 定義要應用於響應路徑上的服務器標頭的操作。 
+         * 默認情況下，Envoy 將使用 server_name 中指定的值覆蓋標頭
+         * 
+         * @defaultValue 'OVERWRITE'
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto#envoy-v3-api-enum-extensions-filters-network-http-connection-manager-v3-httpconnectionmanager-serverheadertransformation extensions.filters.network.http_connection_manager.v3.HttpConnectionManager.ServerHeaderTransformation}
+         */
+        server_header_transformation?: 'OVERWRITE' | 'APPEND_IF_ABSENT' | 'PASS_THROUGH'
+        /**
+         * 允許顯式轉換請求路徑上的 :scheme 標頭。 如果未設置，則應用 Envoy 的默認方案處理。
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/protocol.proto#envoy-v3-api-msg-config-core-v3-schemeheadertransformation config.core.v3.SchemeHeaderTransformation}
+         */
+        scheme_header_transformation?: config.core.v3.SchemeHeaderTransformation
+        /**
+         * uint32 傳入連接的最大請求標頭大小。 
+         * 如果未配置，則允許的默認最大請求標頭為 60 KiB。 
+         * 超過此限制的請求將收到 431 響應。
+         */
+        max_request_headers_kb?: number
+        /**
+         * 連接管理器管理的連接的流空閒超時
+         * @defaultValue "300s"
+         * {@link https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#duration Duration}
+         */
+        stream_idle_timeout?: string
+        /**
+         * Envoy 等待接收整個請求的時間量。 
+         * 計時器在請求發起時激活，並在請求的最後一個字節向上游發送（即所有解碼過濾器已處理請求）或響應發起時解除。 
+         * 如果未指定或設置為 0，則禁用此超時。
+         * {@link https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#duration Duration}
+         */
+        request_timeout?: string
+        /**
+         * Envoy 等待接收請求標頭的時間量。 
+         * 計時器在接收到報頭的第一個字節時激活，並在接收到報頭的最後一個字節時解除。 
+         * 如果未指定或設置為 0，則禁用此超時。
+         * {@link https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#duration Duration}
+         */
+        request_headers_timeout?: string
+        /**
+         * 在發送 HTTP/2“關閉通知”（具有最大流 ID 的 GOAWAY 幀）和最終 GOAWAY 幀之間等待的時間
+         * @defaultValue "5s"
+         * {@link https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#duration Duration}
+         */
+        drain_timeout?: string
+        /**
+         * 延遲關閉超時適用於由 HTTP 連接管理器管理的下游連接
+         * @defaultValue "1s"
+         * {@link https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#duration Duration}
+         */
+        delayed_close_timeout?: string
+        /**
+         * 日誌
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/accesslog/v3/accesslog.proto#envoy-v3-api-msg-config-accesslog-v3-accesslog config.accesslog.v3.AccessLog}
+         */
+        access_log?: Array<config.accesslog.v3.AccessLog>
+        /**
+         * 刷新上述訪問日誌的時間間隔。
+         * 
+         * @remarks
+         *  默認情況下，當 HTTP 請求完成時，HCM 將在流關閉時恰好刷新一個訪問日誌。
+         *  如果設置了該字段，HCM 將以指定的時間間隔定期刷新訪問日誌。 
+         * 這在長期請求的情況下特別有用，例如 CONNECT 和 Websockets。 
+         * 可以通過訪問日誌過濾器中 StreamInfo 的 requestComplete() 方法或通過 %DURATION% 替換字符串檢測最終訪問日誌。
+         *  間隔必須至少為 1 毫秒
+         * {@link https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#duration Duration}
+         */
+        access_log_flush_interval?: string
+        /**
+         * 如果設置為 true，HCM 將在收到新的 HTTP 請求時刷新一次訪問日誌，在評估請求標頭之後，然後遍歷 HTTP 過濾器鏈。 
+         * 與上游集群相關的詳細信息，例如上游主機，將不適用於此日
+         */
+        flush_access_log_on_new_request?: boolean
+        /**
+         * 如果設置為 true，連接管理器將在確定內部與外部來源和操作各種標頭時使用客戶端連接的真實遠程地址。 
+         * 如果設置為 false 或不存在，連接管理器將使用 x-forwarded-for HTTP 標頭
+         */
+        use_remote_address?: boolean
+        /**
+         * uint32 在確定原始客戶端的 IP 地址時，要信任的來自 x-forwarded-for HTTP 標頭右側的額外入口代理躍點數。 
+         * 如果未指定此選項，則默認值為零
+         */
+        xff_num_trusted_hops?: number
+        /**
+         * 原始 IP 檢測擴展的配置。
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/extension.proto#envoy-v3-api-msg-config-core-v3-typedextensionconfig config.core.v3.TypedExtensionConfig}
+         */
+        original_ip_detection_extensions?: Array<config.core.v3.TypedExtensionConfig>
+        /**
+         * 早期標頭突變擴展的配置
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/extension.proto#envoy-v3-api-msg-config-core-v3-typedextensionconfig config.core.v3.TypedExtensionConfig}
+         */
+        early_header_mutation_extensions?: Array<config.core.v3.TypedExtensionConfig>
+        /**
+         * 配置哪些網絡地址被認為是內部的，用於統計和標題衛生目的。 
+         * 如果未指定，則只有 RFC1918 IP 地址將被視為內部地址
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto#envoy-v3-api-msg-extensions-filters-network-http-connection-manager-v3-httpconnectionmanager-internaladdressconfig extensions.filters.network.http_connection_manager.v3.HttpConnectionManager.InternalAddressConfig}
+         */
+        internal_address_config?: extensions.filters.network.http_connection_manager.v3.HttpConnectionManager.InternalAddressConfig
+        /**
+         * 如果設置，Envoy 將不會將遠程地址附加到 x-forwarded-for HTTP 標頭
+         */
+        skip_xff_append?: boolean
+        /**
+         * 通過標頭值附加到請求和響應標頭
+         */
+        via?: string
+        /**
+         * 連接管理器是否會生成 x-request-id 標頭。 
+         * 生成隨機 UUID4 的成本很高，因此在不需要此功能的高吞吐量場景中可以禁用它
+         * @defaultValue true
+         */
+        generate_request_id?: boolean
+        /**
+         * 如果傳遞給邊緣請求（邊緣請求是從外部客戶端到前端 Envoy 的請求），連接管理器是否會保留 x-request-id 標頭而不重置它，這是當前 Envoy 的行為
+         * @defaultValue false
+         */
+        preserve_external_request_id?: boolean
+        /**
+         * 如果設置，Envoy 將始終設置 x-request-id 標頭作為響應。 
+         * 如果這是 false 或未設置，則僅當使用 x-envoy-force-trace 標頭強制跟踪時，請求 ID 才會在響應中返回。
+         */
+        always_set_request_id_in_response?: boolean
+        /**
+         * 如何處理 x-forwarded-client-cert (XFCC) HTTP 標頭
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto#envoy-v3-api-enum-extensions-filters-network-http-connection-manager-v3-httpconnectionmanager-forwardclientcertdetails extensions.filters.network.http_connection_manager.v3.HttpConnectionManager.ForwardClientCertDetails}
+         */
+        forward_client_cert_details?: extensions.filters.network.http_connection_manager.v3.HttpConnectionManager.ForwardClientCertDetails
+        /**
+         * 此字段僅在 forward_client_cert_details 為 APPEND_FORWARD 或 SANITIZE_SET 且客戶端連接為 mTLS 時有效。
+         * 它指定要轉發的客戶端證書中的字段
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto#envoy-v3-api-msg-extensions-filters-network-http-connection-manager-v3-httpconnectionmanager-setcurrentclientcertdetails extensions.filters.network.http_connection_manager.v3.HttpConnectionManager.SetCurrentClientCertDetails}
+         */
+        set_current_client_cert_details?: extensions.filters.network.http_connection_manager.v3.HttpConnectionManager.SetCurrentClientCertDetails
+        /**
+         * 如果 proxy_100_continue 為真，Envoy 將在上游代理傳入的“Expect: 100-continue”標頭，並向下游轉發“100 Continue”響應
+         */
+        proxy_100_continue?: boolean
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto#envoy-v3-api-msg-extensions-filters-network-http-connection-manager-v3-httpconnectionmanager-upgradeconfig extensions.filters.network.http_connection_manager.v3.HttpConnectionManager.UpgradeConfig}
+         */
+        upgrade_configs?: Array<extensions.filters.network.http_connection_manager.v3.HttpConnectionManager.UpgradeConfig>
+        /**
+         * 在通過 HTTP 過濾器或路由處理任何請求之前，是否應該根據 RFC 3986 對路徑進行規範化？ 這也會影響上游 :path 標頭
+         */
+        normalize_path?: boolean
+        /**
+         * 確定在 HTTP 過濾器或路由對請求進行任何處理之前，路徑中的相鄰斜杠是否合併為一個。 這也會影響上游 :path 標頭
+         */
+        merge_slashes?: boolean
+        /**
+         * 當請求 URL 路徑包含轉義的斜杠序列（%2F、%2f、%5C 和 %5c）時要採取的操作
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto#envoy-v3-api-enum-extensions-filters-network-http-connection-manager-v3-httpconnectionmanager-pathwithescapedslashesaction extensions.filters.network.http_connection_manager.v3.HttpConnectionManager.PathWithEscapedSlashesAction}
+         */
+        path_with_escaped_slashes_action?: 'IMPLEMENTATION_SPECIFIC_DEFAULT' | 'KEEP_UNCHANGED' | 'REJECT_REQUEST' | 'UNESCAPE_AND_REDIRECT' | 'UNESCAPE_AND_FORWARD'
+        /**
+         * 請求 ID 擴展的配置
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto#envoy-v3-api-msg-extensions-filters-network-http-connection-manager-v3-requestidextension extensions.filters.network.http_connection_manager.v3.RequestIDExtension}
+         */
+        request_id_extension?: RequestIDExtension
+        /**
+         * 自定義 Envoy 返回的本地回复的配置
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto#envoy-v3-api-msg-extensions-filters-network-http-connection-manager-v3-localreplyconfig extensions.filters.network.http_connection_manager.v3.LocalReplyConfig}
+         */
+        local_reply_config?: LocalReplyConfig
+        /**
+         * 確定在 HTTP 過濾器或路由對請求進行任何處理之前是否應從主機/權限標頭中刪除端口部分
+         * @remarks
+         * 僅當該端口等於偵聽器的本地端口時，該端口才會被刪除。 
+         * 這會影響上游主機頭，除非方法是 CONNECT，在這種情況下，如果沒有過濾器添加端口，則在將頭髮送到上游之前，將恢復原始端口。 
+         * 如果不設置此選項，主機 example:443 的傳入請求將不會匹配域匹配設置為 example 的路由。 
+         *  請注意，端口刪除不是 HTTP 規範的一部分，只是為了方便起見。 
+         * 只能設置 strip_matching_host_port 或 strip_any_host_port 之一。
+         * 
+         * @defaultValue false
+         */
+        strip_matching_host_port?: boolean
+        /**
+         * 確定在 HTTP 過濾器或路由對請求進行任何處理之前是否應從主機/權限標頭中刪除端口部分
+         * @remarks
+         * 這會影響上游主機頭，除非方法是 CONNECT，在這種情況下，如果沒有過濾器添加端口，則在將頭髮送到上游之前，將恢復原始端口。
+         * 如果不設置此選項，主機 example:443 的傳入請求將不會匹配域匹配設置為 example 的路由。 
+         * 請注意，端口刪除不是 HTTP 規範的一部分，只是為了方便起見。 
+         * 只能設置 strip_matching_host_port 或 strip_any_host_port 之一。
+         * @defaultValue false
+         */
+        strip_any_host_port?: boolean
+        /**
+         * 當從下游接收到無效的 HTTP 時，管理 Envoy 的行為
+         */
+        stream_error_on_invalid_http_message?: boolean
+        /**
+         * 確定在 HTTP 過濾器或路由對請求進行任何處理之前是否應從主機/權限標頭中刪除主機的尾隨點
+         * @remarks
+         * 這會影響上游主機標頭。 如果不設置此選項，則使用主機 example.com. 傳入請求，不會匹配域匹配設置為 example.com 的路由。 
+         * 當傳入請求包含包含端口號的主機/權限標頭時，設置此選項將從主機部分刪除尾隨點（如果存在），而端口保持原樣（例如主機值 example.com.:443 將是 更新為 example.com:443）。
+         * @defaultValue false
+         */
+        strip_trailing_host_dot?: boolean
+        /**
+         * proxy-Status HTTP 響應頭配置。 如果設置了此配置，則會填充 Proxy-Status HTTP 響應標頭字段
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto#envoy-v3-api-msg-extensions-filters-network-http-connection-manager-v3-httpconnectionmanager-proxystatusconfig extensions.filters.network.http_connection_manager.v3.HttpConnectionManager.ProxyStatusConfig}
+         */
+        proxy_status_config?: extensions.filters.network.http_connection_manager.v3.HttpConnectionManager.ProxyStatusConfig
+        /**
+         * 將 x-forwarded-port 標頭附加到客戶端用於連接到 Envoy 的端口值。 
+         * 如果 x-forwarded-port 標頭已由 Envoy 前面的任何受信任代理設置，它將被忽略
+         */
+        append_x_forwarded_port?: boolean
+        /**
+         * HCM 是否將 ProxyProtocolFilterState 添加到連接生命週期過濾器狀態
+         * @defaultValue true
+         */
+        add_proxy_protocol_connection_state?: boolean
+    }
+    /**
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto#envoy-v3-api-msg-extensions-filters-network-http-connection-manager-v3-rds extensions.filters.network.http_connection_manager.v3.Rds}
+     */
+    export interface Rds {
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/config_source.proto#envoy-v3-api-msg-config-core-v3-configsource config.core.v3.ConfigSource}
+         */
+        config_source: config.core.v3.ConfigSource
+        /**
+         * 路由配置的名稱。 此名稱將傳遞給 RDS API。 
+         * 這允許具有多個 HTTP 偵聽器（和關聯的 HTTP 連接管理器過濾器）的 Envoy 配置使用不同的路由配置。
+         */
+        route_config_name?: string
+    }
+    /**
+     * @alpha
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto#envoy-v3-api-msg-extensions-filters-network-http-connection-manager-v3-scopedroutes extensions.filters.network.http_connection_manager.v3.ScopedRoutes}
+     */
+    export interface ScopedRoutes { }
+    /**
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto#envoy-v3-api-msg-extensions-filters-network-http-connection-manager-v3-httpfilter extensions.filters.network.http_connection_manager.v3.HttpFilter}
+     */
+    export interface HttpFilter {
+
+    }
+    /**
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto#envoy-v3-api-msg-extensions-filters-network-http-connection-manager-v3-requestidextension extensions.filters.network.http_connection_manager.v3.RequestIDExtension}
+     */
+    export interface RequestIDExtension {
+        typed_config?: any
+    }
+    /**
+     * @alpha
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/network/http_connection_manager/v3/http_connection_manager.proto#envoy-v3-api-msg-extensions-filters-network-http-connection-manager-v3-localreplyconfig extensions.filters.network.http_connection_manager.v3.LocalReplyConfig}
+     */
+    export interface LocalReplyConfig { }
+}
+
 export namespace config {
+    export namespace route.v3 {
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route.proto#envoy-v3-api-msg-config-route-v3-routeconfiguration config.route.v3.RouteConfiguration}
+         */
+        export interface RouteConfiguration {
+            /**
+             * 路由配置的名稱
+             */
+            name?: string
+            /**
+             * 虛擬主機列表
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-virtualhost config.route.v3.VirtualHost}
+             */
+            virtual_hosts?: Array<VirtualHost>
+            /**
+             * 一組虛擬主機將通過 VHDS API 動態加載
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route.proto#envoy-v3-api-msg-config-route-v3-vhds config.route.v3.Vhds}
+             */
+            vhds?: Vhds
+            /**
+             * 指定連接管理器將認為僅供內部使用的 HTTP 標頭列表。 
+             * 如果它們在外部請求中被發現，它們將在過濾器調用之前被清除
+             */
+            internal_only_headers?: Array<string>
+            /**
+             * 指定應添加到連接管理器編碼的每個響應的 HTTP 標頭列表
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-headervalueoption config.core.v3.HeaderValueOption}
+             */
+            response_headers_to_add?: Array<config.core.v3.HeaderValueOption>
+            /**
+             * 指定應從連接管理器編碼的每個響應中刪除的 HTTP 標頭列表
+             */
+            response_headers_to_remove?: Array<string>
+            /**
+             * 指定應添加到 HTTP 連接管理器路由的每個請求的 HTTP 標頭列表
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-headervalueoption config.core.v3.HeaderValueOption}
+             */
+            request_headers_to_add?: Array<config.core.v3.HeaderValueOption>
+            /**
+             * 指定應從 HTTP 連接管理器路由的每個請求中刪除的 HTTP 標頭列表
+             */
+            request_headers_to_remove?: Array<string>
+            /**
+             * 默認情況下，應添加/刪除的標頭從最具體到最不具體進行評估：
+             * - 路由級別
+             * - 虛擬主機級別
+             * - 連接管理器級別
+             * 
+             * 要允許在路由或虛擬主機級別設置覆蓋，可以通過將此選項設置為 true 來顛倒此順序
+             * 
+             * @defaultValue false
+             */
+            most_specific_header_mutations_wins?: boolean
+            /**
+             * 指定路由表引用的集群是否將由集群管理器驗證
+             * @remarks
+             * 如果設置為 true 且路由引用不存在的集群，則不會加載路由表。 
+             * 如果設置為 false 且路由引用不存在的集群，則路由表將加載，並且如果在運行時選擇路由，路由器過濾器將返回 404。 
+             * 如果路由表是通過 route_config 選項靜態定義的，則此設置默認為 true。 
+             * 如果通過 rds 選項動態加載路由表，則此設置默認為 false。 
+             * 用戶可能希望在某些情況下覆蓋默認行為（例如，當使用帶有靜態路由表的 CDS 時）
+             */
+            validate_clusters?: boolean
+            /**
+             * uint32 響應直接響應正文大小的最大字節數
+             * 
+             * @defaultValue 4096
+             */
+            max_direct_response_body_size_bytes?: number
+            /**
+             * 路由中的集群說明符插件名稱可能使用的插件列表及其配置。 
+             * 此列表中的所有 extension.name 字段必須是唯一的
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-clusterspecifierplugin config.route.v3.ClusterSpecifierPlugin}
+             */
+            cluster_specifier_plugins?: Array<ClusterSpecifierPlugin>
+            /**
+             * 指定一組默認的請求鏡像策略，適用於其虛擬主機下的所有路由
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-routeaction-requestmirrorpolicy config.route.v3.RouteAction.RequestMirrorPolicy}
+             */
+            request_mirror_policies?: Array<RequestMirrorPolicy>
+            /**
+             * 默認情況下， :authority 標頭中的端口（如果有）用於主機匹配。
+             * @remarks
+             * 啟用此選項後，Envoy 在選擇 VirtualHost 時將忽略 :authority 標頭中的端口號（如果有）。
+             * 注意：此選項不會去除路由配置 config.route.v3.VirtualHost.domains 字段中包含的端口號（如果有）。
+             */
+            ignore_port_in_host_matching?: boolean
+            /**
+             * 忽略路徑匹配中的路徑參數。 
+             * @remarks
+             * 在 RFC3986 之前，URI 類似於(RFC1808): <scheme>://<net_loc>/<path>;<params>?<query>#<fragment> Envoy 默認將 ':path' 作為 '<path>;<params>'。 
+             * 對於只想匹配 '<path>' 部分的用戶，此選項應該為 true
+             */
+            ignore_path_parameters_in_path_matching?: boolean
+            /**
+             * 用於提供每個過濾器配置的 RouteConfiguration 級別
+             */
+            typed_per_filter_config?: Record<string, any>
+        }
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-virtualhost config.route.v3.VirtualHost}
+         */
+        export interface VirtualHost { }
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route.proto#envoy-v3-api-msg-config-route-v3-vhds config.route.v3.Vhds}
+         */
+        export interface Vhds {
+            /**
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/config_source.proto#envoy-v3-api-msg-config-core-v3-configsource config.core.v3.ConfigSource}
+             */
+            config_source: Array<config.core.v3.ConfigSource>
+        }
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-clusterspecifierplugin config.route.v3.ClusterSpecifierPlugin}
+         */
+        export interface ClusterSpecifierPlugin {
+            /**
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/extension.proto#envoy-v3-api-msg-config-core-v3-typedextensionconfig config.core.v3.TypedExtensionConfig}
+             */
+            extension: config.core.v3.TypedExtensionConfig
+            is_optional?: boolean
+        }
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-routeaction-requestmirrorpolicy config.route.v3.RouteAction.RequestMirrorPolicy}
+         */
+        export interface RequestMirrorPolicy { }
+    }
     export namespace accesslog.v3 {
         /**
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/accesslog/v3/accesslog.proto#config-accesslog-v3-accesslog config.accesslog.v3.AccessLog}
@@ -158,6 +655,29 @@ export namespace config {
     }
     export namespace core.v3 {
         /**
+         * @alpha
+         *  {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-headervalueoption config.core.v3.HeaderValueOption}
+         */
+        export interface HeaderValueOption { }
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/protocol.proto#envoy-v3-api-msg-config-core-v3-schemeheadertransformation config.core.v3.SchemeHeaderTransformation}
+         */
+        export interface SchemeHeaderTransformation { }
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#envoy-v3-api-msg-config-core-v3-cidrrange config.core.v3.CidrRange}
+         */
+        export interface CidrRange {
+            /**
+             *  IPv4 or IPv6 address, e.g. 192.0.0.0 or 2001:db8::.
+             */
+            address_prefix?: string
+            /**
+             * uint32 前綴長度，例如 0、32。未設置時默認為 0
+             */
+            prefix_len?: number
+        }
+        /**
          * 指定一個邏輯或物理地址，用於告訴 Envoy 在哪裏 bind/listen， connect 上游，查找管理服務器
          * 
          * @remarks
@@ -234,6 +754,15 @@ export namespace config {
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/socket_option.proto#envoy-v3-api-msg-config-core-v3-socketoption config.core.v3.SocketOption}
          */
         export interface SocketOption { }
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/socket_option.proto#config-core-v3-socketoptionsoverride config.core.v3.SocketOptionsOverride
+         */
+        export interface SocketOptionsOverride {
+            /**
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/socket_option.proto#envoy-v3-api-msg-config-core-v3-socketoption config.core.v3.SocketOption}
+             */
+            socket_options?: Array<SocketOption>
+        }
         /**
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#envoy-v3-api-msg-config-core-v3-pipe config.core.v3.Pipe}
          */
@@ -528,6 +1057,12 @@ export namespace config {
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/health_check.proto#envoy-v3-api-enum-config-core-v3-healthstatus config.core.v3.HealthStatus}
          */
         export type HealthStatus = 'UNKNOWN' | 'HEALTHY' | 'UNHEALTHY' | 'DRAINING' | 'TIMEOUT' | 'DEGRADED'
+
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/config_source.proto#envoy-v3-api-msg-config-core-v3-extensionconfigsource config.core.v3.ExtensionConfigSource}
+         */
+        export interface ExtensionConfigSource { }
     }
     export namespace endpoint.v3 {
         export namespace Endpoint {
@@ -671,11 +1206,360 @@ export namespace config {
         }
     }
     export namespace listener.v3 {
+        export namespace Listener {
+            /**
+             * @alpha
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener.proto#envoy-v3-api-msg-config-listener-v3-listener-connectionbalanceconfig config.listener.v3.Listener.ConnectionBalanceConfig}
+             */
+            export interface ConnectionBalanceConfig { }
+            /**
+             * @alpha
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener.proto#envoy-v3-api-msg-config-listener-v3-listener-internallistenerconfig config.listener.v3.Listener.InternalListenerConfig}
+             */
+            export interface InternalListenerConfig { }
+        }
+        export namespace FilterChainMatch {
+            /**
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener_components.proto#envoy-v3-api-enum-config-listener-v3-filterchainmatch-connectionsourcetype config.listener.v3.FilterChainMatch.ConnectionSourceType}
+             */
+            export type ConnectionSourceType = 'ANY' | 'SAME_IP_OR_LOOPBACK' | 'EXTERNAL'
+        }
         /**
-         * @alpha
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener.proto#envoy-v3-api-msg-config-listener-v3-listener config.listener.v3.Listener}
          */
         export interface Listener {
+            /**
+             * 監聽器的唯一名稱
+             * 
+             * @remarks
+             * 如果未提供則 envoy 自動創建一個 uuid作爲名稱。
+             * 如果要使用 {@link https://www.envoyproxy.io/docs/envoy/latest/configuration/listeners/lds#config-listeners-lds LDS} 更新或刪除監聽器則必須指定一個唯一的名稱
+             */
+            name?: string
+            /**
+             * 監聽地址，除非設置了 api_listener/listener_specifier 否則必須設置此值
+             * 
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#envoy-v3-api-msg-config-core-v3-address config.core.v3.Address}
+             */
+            address?: config.core.v3.Address
+            /**
+             * 偵聽器應偵聽的其他地址
+             * 
+             * @remarks
+             * 在單個偵聽器中使用多個地址時，所有地址都使用相同的協議，並且不支持多個內部地址
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener.proto#envoy-v3-api-msg-config-listener-v3-additionaladdress config.listener.v3.AdditionalAddress}
+             */
+            additional_addresses?: Array<AdditionalAddress>
+            /**
+             * 統計信息前綴
+             * 
+             * @remarks
+             * 如果為空，統計信息將以 listener.<address as string>.. 如果非空，統計信息將以 listener.<stat_prefix>..
+             */
+            stat_prefix?: string
+            /**
+             * 監聽器上的過濾鏈
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener_components.proto#envoy-v3-api-msg-config-listener-v3-filterchain config.listener.v3.FilterChain}
+             */
+            filter_chains?: Array<FilterChain>
+            /**
+             * @alpha
+             * 從網路獲取過濾鏈名稱
+             */
+            filter_chain_matcher?: any
+            /**
+             * 如果使用 iptables 重定向連接，則代理接收它的端口可能與原始目標地址不同。
+             * 當此標誌設置為 true 時，偵聽器將重定向連接移交給與原始目標地址關聯的偵聽器。 
+             * 如果沒有與原始目標地址關聯的偵聽器，則連接由接收它的偵聽器處理
+             * 
+             * @defaultValue false
+             */
+            use_original_dst?: boolean,
+            /**
+             * 如果沒有匹配的過濾器鏈，則使用默認過濾器鏈。
+             * 如果沒有提供默認的過濾器鏈，連接將被關閉。 
+             * 過濾器鏈匹配在此字段中被忽略。
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener_components.proto#envoy-v3-api-msg-config-listener-v3-filterchain config.listener.v3.FilterChain}
+             */
+            default_filter_chain?: FilterChain
+            /**
+             * 對偵聽器的新連接讀寫緩衝區大小的軟限制
+             * 
+             * @defaultValue 1024*1024 = 1M
+             */
+            per_connection_buffer_limit_bytes?: number
+            /**
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-metadata config.core.v3.Metadata}
+             */
+            metadata?: config.core.v3.Metadata
+            /**
+             * 在偵聽器級別執行的耗盡類型
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener.proto#envoy-v3-api-enum-config-listener-v3-listener-draintype config.listener.v3.Listener.DrainType}
+             */
+            drain_type?: 'DEFAULT' | 'MODIFY_ONLY'
+            /**
+             * 監聽器過濾器，用於指定監聽器的類型
+             * 
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener_components.proto#envoy-v3-api-msg-config-listener-v3-listenerfilter config.listener.v3.ListenerFilter}
+             */
+            listener_filters?: Array<ListenerFilter>
+            /**
+             * 等待所有偵聽器過濾器完成操作的超時時間
+             * 
+             * @defaultValue 5s
+             * 
+             * @remarks
+             * 如果達到超時，除非將 continue_on_listener_filters_timeout 設置為 true，否則將關閉接受的套接字而不創建連接。 
+             * 指定 0 以禁用超時。
+             * 如果未指定，則使用默認超時 15 秒。
+             * 
+             * {@link https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#duration Duration}
+             */
+            listener_filters_timeout?: string
+            /**
+             * 當偵聽器過濾器超時時是否應創建連接
+             * 
+             * @defaultValue false
+             */
+            continue_on_listener_filters_timeout?: boolean
+            /**
+             * 是否應將偵聽器設置為透明套接字 TPROXY
+             */
+            transparent?: boolean
+            /**
+             * 是否啓用 IP_FREEBIND 選項
+             */
+            freebind?: boolean
+            /**
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/socket_option.proto#envoy-v3-api-msg-config-core-v3-socketoption config.core.v3.SocketOption}
+             */
+            socket_options?: Array<config.core.v3.SocketOption>
+            /**
+             * 偵聽器是否應接受 TCP 快速打開 (TFO) 連接。 當此標誌設置為大於 0 的值時，選項 TCP_FASTOPEN 在套接字上啟用，隊列長度為指定大小（請參閱 {@link https://tools.ietf.org/html/rfc7413#section-5.1 RFC7413} 中的詳細信息）
+             */
+            tcp_fast_open_queue_length?: number
+            /**
+             * 指定流量相對於本地 Envoy 的預期方向。 對於使用原始目標篩選器的偵聽器，此屬性在 Windows 上是必需的，請參閱{@link https://www.envoyproxy.io/docs/envoy/latest/configuration/listeners/listener_filters/original_dst_filter#config-listener-filters-original-dst 原始目標}
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-enum-config-core-v3-trafficdirection config.core.v3.TrafficDirection}
+             */
+            traffic_direction?: 'UNSPECIFIED' | 'INBOUND' | 'OUTBOUND'
+            /**
+             * 對於 udp 協議，指定udp設定
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/udp_listener_config.proto#envoy-v3-api-msg-config-listener-v3-udplistenerconfig config.listener.v3.UdpListenerConfig}
+             */
+            udp_listener_config?: UdpListenerConfig
+            /**
+             * 用於表示一個 API 偵聽器，用於非代理客戶端。
+             * @remarks
+             * 向非代理應用程序公開的 API 類型取決於 API 偵聽器的類型。 
+             * 設置此字段後，不應設置除名稱以外的其他字段。
+             * 
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/api_listener.proto#envoy-v3-api-msg-config-listener-v3-apilistener config.listener.v3.ApiListener}
+             */
+            api_listener?: ApiListener
+            /**
+             * 偵聽器的連接平衡器配置，目前僅適用於 TCP 偵聽器。
+             * @remarks
+             * 如果未指定配置，Envoy 將不會嘗試平衡工作線程之間的活動連接
+             * 
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener.proto#envoy-v3-api-msg-config-listener-v3-listener-connectionbalanceconfig config.listener.v3.Listener.ConnectionBalanceConfig}
+             */
+            connection_balance_config?: config.listener.v3.Listener.ConnectionBalanceConfig
+            /**
+             * 使用 {@link enable_reuse_port} 替代
+             */
+            reuse_port?: boolean
+            /**
+             * 當此標誌設置為 true 時，偵聽器設置 SO_REUSEPORT 套接字選項並為每個工作線程創建一個套接字。
+             *  這使得入站連接在存在大量連接的情況下大致均勻地分佈在工作線程中。 
+             * 當此標誌設置為 false 時，所有工作線程共享一個套接字
+             * 
+             * @defaultValue true
+             */
+            enable_reuse_port?: boolean
+            /**
+             * 爲監聽器配置日誌
+             * 
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/accesslog/v3/accesslog.proto#envoy-v3-api-msg-config-accesslog-v3-accesslog config.accesslog.v3.AccessLog}
+             */
+            access_log?: Array<config.accesslog.v3.AccessLog>
+            /**
+             * uint32 tcp 偵聽器的掛起連接隊列可以增長到的最大長度。 
+             * 如果未提供任何值， 在 Linux 上使用 net.core.somaxconn，否則為 128。
+             */
+            tcp_backlog_size?: number
+            /**
+             * 偵聽器是否應綁定到端口。 未綁定的偵聽器只能接收從其他將 use_original_dst 設置為 true 的偵聽器重定向的連接
+             * 
+             * @defaultValue true
+             */
+            bind_to_port?: boolean
+            /**
+             * 用於表示不在 OSI L4 地址上偵聽但可由特使集群用來創建用戶空間連接的內部偵聽器。
+             * 內部偵聽器充當 TCP 偵聽器。 它支持偵聽器過濾器和網絡過濾器鏈。 
+             * 上游集群通過名稱引用內部偵聽器。 不得在內部偵聽器上設置地址。
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener.proto#envoy-v3-api-msg-config-listener-v3-listener-internallistenerconfig config.listener.v3.Listener.InternalListenerConfig}
+             */
+            internal_listener?: config.listener.v3.Listener.InternalListenerConfig
+            /**
+             * 在此偵聽器上啟用 MPTCP（多路徑 TCP）。
+             * 客戶端將被允許建立 MPTCP 連接。 非 MPTCP 客戶端將回退到常規 TCP。
+             */
+            nable_mptcp?: boolean
+            /**
+             * 偵聽器是否應根據 global_downstream_max_connections 的值限制連接
+             */
+            ignore_global_conn_limit?: boolean
+        }
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener.proto#envoy-v3-api-msg-config-listener-v3-additionaladdress config.listener.v3.AdditionalAddress}
+         */
+        export interface AdditionalAddress {
+            address?: string
+            /**
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/socket_option.proto#config-core-v3-socketoptionsoverride config.core.v3.SocketOptionsOverride}
+             */
+            socket_options?: Array<config.core.v3.SocketOptionsOverride>
+        }
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener_components.proto#envoy-v3-api-msg-config-listener-v3-filterchain config.listener.v3.FilterChain}
+         */
+        export interface FilterChain {
+            /**
+             * 定義如何匹配此鏈
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener_components.proto#envoy-v3-api-msg-config-listener-v3-filterchainmatch config.listener.v3.FilterChainMatch}
+             */
+            filter_chain_match?: FilterChainMatch
+            /**
+             * 過濾器
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener_components.proto#envoy-v3-api-msg-config-listener-v3-filter config.listener.v3.Filter}
+             */
+            filters?: Array<Filter>
+            /**
+             * 偵聽器是否應在新連接上期望 PROXY 協議 V1 標頭
+             * 
+             * @deprecated 應該顯示增加一個 PROXY 協議的監聽器
+             */
+            use_proxy_proto?: boolean
+            /**
+             * 用於下游連接的可選自定義傳輸套接字實現，例如啓用 tls
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-transportsocket config.core.v3.TransportSocket}
+             */
+            transport_socket?: config.core.v3.TransportSocket
+            /**
+             * 如果存在且非零，則為允許傳入連接完成任何傳輸套接字協商的時間量。 
+             * 如果這在傳輸報告連接建立之前過期，連接將立即關閉。
+             * {@link https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#duration Duration}
+             */
+            transport_socket_connect_timeout?: string
+            /**
+             * 過濾器在監聽器中的唯一名稱
+             */
+            name?: string
+        }
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener_components.proto#envoy-v3-api-msg-config-listener-v3-filter config.listener.v3.Filter}
+         */
+        export interface Filter {
+            /**
+             * 選用的過濾器名稱
+             */
+            name: string
+            /**
+             * 過濾器特定配置取決於正在實例化的過濾器
+             */
+            typed_config?: any
+        }
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener_components.proto#envoy-v3-api-msg-config-listener-v3-listenerfilter config.listener.v3.ListenerFilter}
+         */
+        export interface ListenerFilter {
+            /**
+             * 選擇的過濾器名稱
+             */
+            name: string
+            /**
+             * 過濾器特定配置取決於正在實例化的過濾器
+             */
+            typed_config?: any
+
+            /**
+             * 擴展配置發現服務的配置源說明符。 如果發生故障且沒有默認配置，偵聽器將關閉連接
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/config_source.proto#envoy-v3-api-msg-config-core-v3-extensionconfigsource config.core.v3.ExtensionConfigSource}
+             */
+            config_discovery?: config.core.v3.ExtensionConfigSource
+
+            /**
+             * 用於禁用過濾器的可選匹配謂詞
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener_components.proto#envoy-v3-api-msg-config-listener-v3-listenerfilterchainmatchpredicate config.listener.v3.ListenerFilterChainMatchPredicate}
+             */
+            filter_disabled?: config.listener.v3.ListenerFilterChainMatchPredicate
+        }
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/udp_listener_config.proto#envoy-v3-api-msg-config-listener-v3-udplistenerconfig config.listener.v3.UdpListenerConfig}
+         */
+        export interface UdpListenerConfig { }
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/api_listener.proto#envoy-v3-api-msg-config-listener-v3-apilistener config.listener.v3.ApiListener}
+         */
+        export interface ApiListener {
+            api_listener?: any
+        }
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener_components.proto#envoy-v3-api-msg-config-listener-v3-listenerfilterchainmatchpredicate config.listener.v3.ListenerFilterChainMatchPredicate}
+         */
+        export interface ListenerFilterChainMatchPredicate { }
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener_components.proto#envoy-v3-api-msg-config-listener-v3-filterchainmatch config.listener.v3.FilterChainMatch}
+         */
+        export interface FilterChainMatch {
+            /**
+             * uint32 匹配目的端口
+             */
+            destination_port?: number
+            /**
+             * 如果非空，當偵聽器綁定到 0.0.0.0/:: 或指定 use_original_dst 時，IP 地址和前綴長度匹配地址
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#envoy-v3-api-msg-config-core-v3-cidrrange config.core.v3.CidrRange}
+             */
+            prefix_ranges?: Array<config.core.v3.CidrRange>
+            /**
+             * 如果下游連接的直接連接的源 IP 地址包含在至少一個指定的子網中，則滿足條件。
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#envoy-v3-api-msg-config-core-v3-cidrrange config.core.v3.CidrRange}
+             */
+            direct_source_prefix_ranges?: Array<config.core.v3.CidrRange>
+            /**
+             * 指定連接源 IP 匹配類型。 可以是任何本地或外部網絡。
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener_components.proto#envoy-v3-api-enum-config-listener-v3-filterchainmatch-connectionsourcetype config.listener.v3.FilterChainMatch.ConnectionSourceType}
+             */
+            source_type?: config.listener.v3.FilterChainMatch.ConnectionSourceType
+            /**
+             * 如果下游連接的源 IP 地址至少包含在指定子網之一中，則滿足條件
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#envoy-v3-api-msg-config-core-v3-cidrrange config.core.v3.CidrRange}
+             */
+            source_prefix_ranges?: Array<config.core.v3.CidrRange>
+            /**
+             * uint32 如果下游連接的源端口包含在至少一個指定端口中，則滿足條件
+             */
+            source_ports?: Array<number>
+            /**
+             * 如果非空，則在確定過濾器鏈匹配時要考慮的服務器名稱列表（例如 TLS 協議的 SNI）。 
+             * 
+             * @remarks
+             * 服務器名稱將與所有通配符域匹配，即 www.example.com 將首先與 www.example.com 匹配，然後是 *.example.com，然後是 *.com
+             */
+            server_names?: Array<string>
+            /**
+             * 如果非空，則在確定過濾器鏈匹配時要考慮的傳輸協議
+             */
+            transport_protocol?: 'raw_buffer' | 'tls'
+            /**
+             * 如果非空，則在確定過濾器鏈匹配時要考慮的應用程序協議列表（例如 TLS 協議的 ALPN）
+             * 
+             * - http/1.1 - set by envoy.filters.listener.tls_inspector,
+             * - h2 - set by envoy.filters.listener.tls_inspector
+             */
+            application_protocols?: Array<string>
         }
     }
     export namespace cluster.v3 {
