@@ -5,6 +5,19 @@ export namespace extensions.transport_sockets.tls.v3 {
      */
     export interface Secret { }
 }
+export namespace type.matcher.v3 {
+    /**
+     * @alpha
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/type/matcher/v3/regex.proto#envoy-v3-api-msg-type-matcher-v3-regexmatcher type.matcher.v3.RegexMatcher}
+     */
+    export interface RegexMatcher { }
+
+    /**
+     * @alpha
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/type/matcher/v3/metadata.proto#envoy-v3-api-msg-type-matcher-v3-metadatamatcher type.matcher.v3.MetadataMatcher}
+     */
+    export interface MetadataMatcher { }
+}
 export namespace extensions.filters.network.http_connection_manager.v3 {
     export namespace HttpConnectionManager {
         /**
@@ -375,6 +388,24 @@ export namespace extensions.filters.network.http_connection_manager.v3 {
 
 export namespace config {
     export namespace route.v3 {
+        export namespace RouteAction {
+            /**
+             * @alpha
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-routeaction-requestmirrorpolicy config.route.v3.RouteAction.RequestMirrorPolicy}
+             */
+            export interface RequestMirrorPolicy { }
+        }
+        export namespace RouteMatch {
+            /**
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-routematch-grpcroutematchoptions config.route.v3.RouteMatch.GrpcRouteMatchOptions}
+             */
+            export interface GrpcRouteMatchOptions { }
+            /**
+             * @alpha
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-routematch-tlscontextmatchoptions config.route.v3.RouteMatch.TlsContextMatchOptions}
+             */
+            export interface TlsContextMatchOptions { }
+        }
         /**
          * @alpha
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route.proto#envoy-v3-api-msg-config-route-v3-routeconfiguration config.route.v3.RouteConfiguration}
@@ -500,29 +531,286 @@ export namespace config {
              * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-route config.route.v3.Route}
              */
             routes?: Array<config.route.v3.Route>
-            // "matcher": {...},
-            // "require_tls": ...,
-            // "virtual_clusters": [],
-            // "rate_limits": [],
-            // "request_headers_to_add": [],
-            // "request_headers_to_remove": [],
-            // "response_headers_to_add": [],
-            // "response_headers_to_remove": [],
-            // "cors": {...},
-            // "typed_per_filter_config": {...},
-            // "include_request_attempt_count": ...,
-            // "include_attempt_count_in_response": ...,
-            // "retry_policy": {...},
-            // "hedge_policy": {...},
-            // "include_is_timeout_retry_header": ...,
-            // "per_request_buffer_limit_bytes": {...},
-            // "request_mirror_policies": []
+            /**
+             * 解析傳入請求的路由操作時使用的匹配樹
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/xds/type/matcher/v3/matcher.proto#envoy-v3-api-msg-xds-type-matcher-v3-matcher .xds.type.matcher.v3.Matcher}
+             */
+            matcher?: any
+            /**
+             * 指定虛擬主機期望的 TLS 強制類型。 如果未指定此選項，則虛擬主機沒有 TLS 要求
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-enum-config-route-v3-virtualhost-tlsrequirementtype config.route.v3.VirtualHost.TlsRequirementType}
+             */
+            require_tls?: 'NONE' | 'EXTERNAL_ONLY' | 'ALL'
+            /**
+             * 為此虛擬主機定義的虛擬集群列表。 虛擬集群用於額外的統計數據收集。
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-virtualcluster config.route.v3.VirtualCluster}
+             */
+            virtual_clusters?: Array<VirtualCluster>
+            /**
+             * 指定一組將應用於虛擬主機的速率限製配置
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-ratelimit config.route.v3.RateLimit}
+             */
+            rate_limits?: Array<RateLimit>
+            /**
+             * 指定應添加到此虛擬主機處理的每個請求的 HTTP 標頭列表
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-headervalueoption config.core.v3.HeaderValueOption}
+             */
+            request_headers_to_add?: Array<config.core.v3.HeaderValueOption>
+            /**
+             * 指定應從此虛擬主機處理的每個請求中刪除的 HTTP 標頭列表
+             */
+            request_headers_to_remove?: Array<string>
+            /**
+             * 指定應添加到此虛擬主機處理的每個響應的 HTTP 標頭列表
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-headervalueoption config.core.v3.HeaderValueOption}
+             */
+            response_headers_to_add?: Array<config.core.v3.HeaderValueOption>
+            /**
+             * 指定應從此虛擬主機處理的每個響應中刪除的 HTTP 標頭列表
+             */
+            response_headers_to_remove?: Array<string>
+            /**
+             * 指示虛擬主機具有 CORS 策略
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-corspolicy config.route.v3.CorsPolicy}
+             */
+            cors?: CorsPolicy
+            /**
+             * 用於為過濾器提供特定於虛擬主機的配置
+             */
+            typed_per_filter_config?: Record<string, any>
+            /**
+             * 決定 x-envoy-attempt-count 標頭是否應包含在上游請求中
+             * @defaultValue false
+             */
+            include_request_attempt_count?: boolean
+            /**
+             * 決定 x-envoy-attempt-count 標頭是否應包含在下游響應中
+             * @defaultValue false
+             */
+            include_attempt_count_in_response?: boolean
+            /**
+             * 指示該虛擬主機中所有路由的重試策略
+             * @remarks
+             * 設置路由級別條目將優先於此配置，並且將被獨立處理（例如：值不會被繼承）
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-retrypolicy config.route.v3.RetryPolicy}
+             */
+            retry_policy?: RetryPolicy
+            /**
+             * 指示該虛擬主機中所有路由的對沖策略
+             * @remarks
+             * 設置路由級別條目將優先於此配置，並且將被獨立處理（例如：值不會被繼承）
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-hedgepolicy config.route.v3.HedgePolicy}
+             */
+            hedge_policy?: HedgePolicy
+            /**
+             * 決定是否在每次嘗試超時啟動的重試中包含 x-envoy-is-timeout-retry 請求標頭
+             */
+            include_is_timeout_retry_header?: boolean
+            /**
+             * 將為重試和重試緩衝的最大字節數
+             * @remarks
+             * 如果設置並且未設置特定於路由的限制，則實際緩衝的字節將是此值和偵聽器 per_connection_buffer_limit_bytes 的最小值
+             */
+            per_request_buffer_limit_bytes?: number
+            /**
+             * 為這個虛擬主機下的每條路由指定一組默認的請求鏡像策略
+             * @remarks
+             * 它完全優先於路由配置鏡像策略。 即不合併策略，最具體的非空策略成為鏡像策略。
+             * 
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-routeaction-requestmirrorpolicy config.route.v3.RouteAction.RequestMirrorPolicy}
+             */
+            request_mirror_policies?: Array<config.route.v3.RouteAction.RequestMirrorPolicy>
+        }
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-route config.route.v3.Route}
+         */
+        export interface Route {
+            /**
+             * 路由名稱
+             */
+            name?: string
+            /**
+             * 路由匹配參數
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-routematch config.route.v3.RouteMatch}
+             */
+            match: RouteMatch
+            /**
+             * 將請求路由到某個上游集群
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-routeaction config.route.v3.RouteAction}
+             */
+            route?: RouteAction
+            /**
+             * 返回重定向
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-redirectaction config.route.v3.RedirectAction}
+             */
+            redirect?: RedirectAction
+            /**
+             * 直接返回任意響應
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-directresponseaction config.route.v3.DirectResponseAction}
+             */
+            direct_response?: DirectResponseAction
+            /**
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-metadata config.core.v3.Metadata}
+             */
+            metadata?: config.core.v3.Metadata
+            /**
+             * 匹配路由的裝飾器
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-decorator config.route.v3.Decorator}
+             */
+            decorator?: Decorator
+            /**
+             * 用於為過濾器提供特定於路由的配置。
+             */
+            typed_per_filter_config?: Record<string, any>
+            /**
+             * 指定一組標頭，這些標頭將添加到與此路由匹配的請求中
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-headervalueoption config.core.v3.HeaderValueOption}
+             */
+            request_headers_to_add?: Array<config.core.v3.HeaderValueOption>
+            /**
+             * 指定應從與此路由匹配的每個請求中刪除的 HTTP 標頭列表
+             */
+            request_headers_to_remove?: Array<string>
+            /**
+             * 指定一組標頭，這些標頭將添加到與此路由匹配的請求的響應中
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-headervalueoption config.core.v3.HeaderValueOption}
+             */
+            response_headers_to_add?: Array<config.core.v3.HeaderValueOption>
+            /**
+             * 指定應從匹配此請求的每個響應中刪除的 HTTP 標頭列表
+             */
+            response_headers_to_remove?: Array<string>
+            /**
+             * 對象的存在定義連接管理器的跟踪配置是否被該路由特定實例覆蓋
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-tracing config.route.v3.Tracing}
+             */
+            tracing?: Tracing
+            /**
+             * uint32 將為重試和重試緩衝的最大字節數
+             * @remarks
+             * 如果設置，實際緩衝的字節將是這個和偵聽器 per_connection_buffer_limit_bytes 的最小值
+             */
+            per_request_buffer_limit_bytes?: number
+            /**
+             * 為該端點發出統計信息時使用的人類可讀前綴
+             * @remarks
+             * 統計信息以 vhost.<虛擬主機名>.route.<stat_prefix> 為根。
+             * 這應該為人們希望獲得“每條路線”統計數據的高度關鍵端點設置。 
+             * 如果未設置，則不會生成端點統計信息。
+             * 發出的統計信息與為虛擬集群記錄的統計信息相同。
+             */
+            stat_prefix?: string
+        }
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-routematch config.route.v3.RouteMatch}
+         */
+        export interface RouteMatch {
+            /**
+             * 如果指定，路由是一個前綴規則，意味著前綴必須匹配 :path 標頭的開頭
+             */
+            prefix?: string
+            /**
+             * 如果指定，則該路由是一個精確路徑規則，這意味著一旦刪除查詢字符串，該路徑必須與 :path 標頭完全匹配
+             */
+            path?: string
+            /**
+             * 如果指定，路由是一個正則表達式規則，這意味著一旦刪除查詢字符串，正則表達式必須匹配 :path 標頭。 
+             * @remarks
+             * 整個路徑（不含查詢字符串）必須與正則表達式匹配。 
+             * 如果只有 :path 標頭的子序列與正則表達式匹配，則該規則將不匹配
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/type/matcher/v3/regex.proto#envoy-v3-api-msg-type-matcher-v3-regexmatcher type.matcher.v3.RegexMatcher}
+             */
+            safe_regex?: type.matcher.v3.RegexMatcher
+            /**
+             * 如果將其用作匹配器，則匹配器將僅匹配 CONNECT 請求
+             * 
+             * @remarks
+             * 請注意，這將不匹配 HTTP/2 升級樣式的 CONNECT 請求（WebSocket 等），因為它們在 Envoy 中被規範化為 HTTP/1.1 樣式升級。 
+             * 這是匹配 HTTP/1.1 的 CONNECT 請求的唯一方法。 對於 HTTP/2，Extended CONNECT 請求可能有路徑，如果存在路徑，路徑匹配器將工作。 
+             * 請注意，CONNECT 支持目前在 Envoy 中被視為 alpha
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-routematch-connectmatcher config.route.v3.RouteMatch.ConnectMatcher}
+             */
+            connect_matcher?: any
+            /**
+             * 如果指定，路由是路徑分隔的前綴規則，這意味著 :path 標頭（不帶查詢字符串）必須與 path_separated_prefix 完全匹配或將其作為前綴，後跟 /
+             * @remarks
+             * 例如，/api/dev 會匹配 /api/dev、/api/dev/、/api/dev/v1 和 /api/dev?param=true 但不會匹配 /api/developer
+             */
+            path_separated_prefix?: string
+            /**
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/extension.proto#envoy-v3-api-msg-config-core-v3-typedextensionconfig config.core.v3.TypedExtensionConfig}
+             */
+            path_match_policy?: config.core.v3.TypedExtensionConfig
+            /**
+             * 表示前綴/路徑匹配應該區分大小寫。 不會影響 safe_regex 匹配
+             * @defaultValue true
+             */
+            case_sensitive?: boolean
+            /**
+             * 指示路由還應匹配運行時密鑰
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-runtimefractionalpercent config.core.v3.RuntimeFractionalPercent}
+             */
+            runtime_fraction?: config.core.v3.RuntimeFractionalPercent
+            /**
+             * 指定路由應匹配的一組標頭
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-headermatcher config.route.v3.HeaderMatcher}
+             */
+            headers?: Array<HeaderMatcher>
+            /**
+             * 指定路由應匹配的一組 URL 查詢參數
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-queryparametermatcher config.route.v3.QueryParameterMatcher}
+             */
+            query_parameters?: Array<QueryParameterMatcher>
+            /**
+             * 如果指定，則只會匹配 gRPC 請求。 
+             * 路由器將檢查 content-type 標頭是否具有 application/grpc 或各種 application/grpc+ 值之一
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-routematch-grpcroutematchoptions config.route.v3.RouteMatch.GrpcRouteMatchOptions}
+             */
+            grpc?: config.route.v3.RouteMatch.GrpcRouteMatchOptions
+            /**
+             * 如果指定，客戶端 tls 上下文將根據定義的匹配選項進行匹配
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-routematch-tlscontextmatchoptions config.route.v3.RouteMatch.TlsContextMatchOptions}
+             */
+            tls_context?: config.route.v3.RouteMatch.TlsContextMatchOptions
+            /**
+             * 指定路由應匹配的一組動態元數據匹配器。 路由器將根據所有指定的動態元數據匹配器檢查動態元
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/type/matcher/v3/metadata.proto#envoy-v3-api-msg-type-matcher-v3-metadatamatcher type.matcher.v3.MetadataMatcher}
+             */
+            dynamic_metadata?: Array<type.matcher.v3.MetadataMatcher>
         }
         /**
          * @alpha
-         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-route config.route.v3.Route}
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-headermatcher config.route.v3.HeaderMatcher}
          */
-        export interface Route { }
+        export interface HeaderMatcher { }
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-queryparametermatcher config.route.v3.QueryParameterMatcher}
+         */
+        export interface QueryParameterMatcher { }
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-routeaction config.route.v3.RouteAction}
+         */
+        export interface RouteAction { }
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-redirectaction config.route.v3.RedirectAction}
+         */
+        export interface RedirectAction { }
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-directresponseaction config.route.v3.DirectResponseAction}
+         */
+        export interface DirectResponseAction { }
+
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-tracing config.route.v3.Tracing}
+         */
+        export interface Tracing { }
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-decorator config.route.v3.Decorator}
+         */
+        export interface Decorator { }
         /**
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route.proto#envoy-v3-api-msg-config-route-v3-vhds config.route.v3.Vhds}
          */
@@ -547,6 +835,31 @@ export namespace config {
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-routeaction-requestmirrorpolicy config.route.v3.RouteAction.RequestMirrorPolicy}
          */
         export interface RequestMirrorPolicy { }
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-virtualcluster config.route.v3.VirtualCluster}
+         */
+        export interface VirtualCluster { }
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-ratelimit config.route.v3.RateLimit}
+         */
+        export interface RateLimit { }
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-corspolicy config.route.v3.CorsPolicy}
+         */
+        export interface CorsPolicy { }
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-retrypolicy config.route.v3.RetryPolicy}
+         */
+        export interface RetryPolicy { }
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-hedgepolicy config.route.v3.HedgePolicy}
+         */
+        export interface HedgePolicy { }
     }
     export namespace accesslog.v3 {
         /**
@@ -699,6 +1012,10 @@ export namespace config {
         export interface CustomInlineHeader { }
     }
     export namespace core.v3 {
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-runtimefractionalpercent config.core.v3.RuntimeFractionalPercent}
+         */
+        export interface RuntimeFractionalPercent { }
         /**
          * @alpha
          *  {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-headervalueoption config.core.v3.HeaderValueOption}
