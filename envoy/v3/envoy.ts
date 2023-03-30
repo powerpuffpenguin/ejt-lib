@@ -1,22 +1,152 @@
 export namespace extensions.transport_sockets.tls.v3 {
     /**
-     * @alpha
      * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/transport_sockets/tls/v3/secret.proto#envoy-v3-api-msg-extensions-transport-sockets-tls-v3-secret extensions.transport_sockets.tls.v3.Secret}
      */
-    export interface Secret { }
+    export interface Secret {
+        /**
+         * 引用這個證書的唯一名稱 （FQDN、UUID、SPKI、SHA256 等）
+         */
+        name?: string
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/transport_sockets/tls/v3/common.proto#envoy-v3-api-msg-extensions-transport-sockets-tls-v3-tlscertificate extensions.transport_sockets.tls.v3.TlsCertificate}
+         */
+        tls_certificate?: TlsCertificate
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/transport_sockets/tls/v3/secret.proto#envoy-v3-api-msg-extensions-transport-sockets-tls-v3-secret extensions.transport_sockets.tls.v3.TlsSessionTicketKeys}
+         */
+        session_ticket_keys?: TlsSessionTicketKeys
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/transport_sockets/tls/v3/common.proto#envoy-v3-api-msg-extensions-transport-sockets-tls-v3-certificatevalidationcontext extensions.transport_sockets.tls.v3.CertificateValidationContext}
+         */
+        validation_context?: CertificateValidationContext
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/transport_sockets/tls/v3/secret.proto#envoy-v3-api-msg-extensions-transport-sockets-tls-v3-genericsecret extensions.transport_sockets.tls.v3.GenericSecret}
+         */
+        generic_secret?: GenericSecret
+    }
+    /**
+     * @alpha
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/transport_sockets/tls/v3/common.proto#envoy-v3-api-msg-extensions-transport-sockets-tls-v3-tlscertificate extensions.transport_sockets.tls.v3.TlsCertificate}
+     */
+    export interface TlsCertificate {
+        /**
+         * The TLS certificate chain.
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-datasource config.core.v3.DataSource}
+         */
+        certificate_chain?: config.core.v3.DataSource
+        /**
+         * The TLS private key.
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-datasource config.core.v3.DataSource}
+         */
+        private_key?: config.core.v3.DataSource
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-datasource config.core.v3.DataSource}
+         */
+        pkcs12?: config.core.v3.DataSource
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-watcheddirectory config.core.v3.WatchedDirectory}
+         */
+        watched_directory?: config.core.v3.WatchedDirectory
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/transport_sockets/tls/v3/common.proto#envoy-v3-api-msg-extensions-transport-sockets-tls-v3-privatekeyprovider extensions.transport_sockets.tls.v3.PrivateKeyProvider}
+         */
+        private_key_provider?: PrivateKeyProvider
+        /**
+         * The password to decrypt the TLS private key.
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-datasource config.core.v3.DataSource}
+         */
+        password?: config.core.v3.DataSource
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-datasource config.core.v3.DataSource}
+         */
+        ocsp_staple?: config.core.v3.DataSource
+    }
+    /**
+     * @alpha
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/transport_sockets/tls/v3/secret.proto#envoy-v3-api-msg-extensions-transport-sockets-tls-v3-secret extensions.transport_sockets.tls.v3.TlsSessionTicketKeys}
+     */
+    export interface TlsSessionTicketKeys { }
+    /**
+     * @alpha
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/transport_sockets/tls/v3/common.proto#envoy-v3-api-msg-extensions-transport-sockets-tls-v3-certificatevalidationcontext extensions.transport_sockets.tls.v3.CertificateValidationContext}
+     */
+    export interface CertificateValidationContext { }
+    /**
+     * @alpha
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/transport_sockets/tls/v3/secret.proto#envoy-v3-api-msg-extensions-transport-sockets-tls-v3-genericsecret extensions.transport_sockets.tls.v3.GenericSecret}
+     */
+    export interface GenericSecret { }
+    /**
+     * @alpha
+     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/transport_sockets/tls/v3/common.proto#envoy-v3-api-msg-extensions-transport-sockets-tls-v3-privatekeyprovider extensions.transport_sockets.tls.v3.PrivateKeyProvider}
+     */
+    export interface PrivateKeyProvider { }
 }
-export namespace type.matcher.v3 {
-    /**
-     * @alpha
-     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/type/matcher/v3/regex.proto#envoy-v3-api-msg-type-matcher-v3-regexmatcher type.matcher.v3.RegexMatcher}
-     */
-    export interface RegexMatcher { }
 
-    /**
-     * @alpha
-     * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/type/matcher/v3/metadata.proto#envoy-v3-api-msg-type-matcher-v3-metadatamatcher type.matcher.v3.MetadataMatcher}
-     */
-    export interface MetadataMatcher { }
+export namespace type {
+    export namespace v3 {
+        /**
+         *  {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/type/v3/range.proto#envoy-v3-api-msg-type-v3-int64range type.v3.Int64Range}
+         */
+        export interface Int64Range {
+            /**
+             * int64 開始範圍(包含 start 值)
+             */
+            start: string | number
+            /**
+             * int64 結束範圍(不包含 end 值
+             */
+            end: string | number
+        }
+    }
+    export namespace matcher.v3 {
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/type/matcher/v3/regex.proto#envoy-v3-api-msg-type-matcher-v3-regexmatcher type.matcher.v3.RegexMatcher}
+         */
+        export interface RegexMatcher { }
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/type/matcher/v3/regex.proto#envoy-v3-api-msg-type-matcher-v3-regexmatchandsubstitute type.matcher.v3.RegexMatchAndSubstitute}
+         */
+        export interface RegexMatchAndSubstitute { }
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/type/matcher/v3/metadata.proto#envoy-v3-api-msg-type-matcher-v3-metadatamatcher type.matcher.v3.MetadataMatcher}
+         */
+        export interface MetadataMatcher { }
+
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/type/matcher/v3/string.proto#envoy-v3-api-msg-type-matcher-v3-stringmatcher type.matcher.v3.StringMatcher}
+         */
+        export interface StringMatcher {
+            /**
+             * 輸入字符串必須與此處指定的字符串完全匹配
+             */
+            exact?: string
+            /**
+             * 輸入字符串必須具有此處指定的前綴。 注意：不允許使用空前綴，請改用正則表達式
+             */
+            prefix?: string
+            /**
+             * 輸入字符串必須具有此處指定的後綴。 注意：不允許使用空前綴，請改用正則表達式
+             */
+            suffix?: string
+            /**
+             * 輸入字符串必須匹配此處指定的正則表達式
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/type/matcher/v3/regex.proto#envoy-v3-api-msg-type-matcher-v3-regexmatcher type.matcher.v3.RegexMatcher}
+             */
+            safe_regex?: RegexMatcher
+            /**
+             * 輸入字符串必須具有此處指定的子字符串。 注意：不允許空包含匹配，請改用正則表達式
+             */
+            contains?: string
+            /**
+             * 如果為真，則表示 exact/prefix/suffix/contains 匹配應該不區分大小寫。 這對 safe_regex 匹配沒有影響。
+             */
+            ignore_case?: boolean
+        }
+    }
 }
 export namespace extensions.filters.network.http_connection_manager.v3 {
     export namespace HttpConnectionManager {
@@ -779,10 +909,70 @@ export namespace config {
             dynamic_metadata?: Array<type.matcher.v3.MetadataMatcher>
         }
         /**
-         * @alpha
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-headermatcher config.route.v3.HeaderMatcher}
          */
-        export interface HeaderMatcher { }
+        export interface HeaderMatcher {
+            /**
+             * 要匹配的 header key 名稱
+             */
+            name: string
+            /**
+             * 如果指定，將根據標頭的值執行標頭匹配
+             * @deprecated 使用 string_match 替代
+             */
+            exact_match?: string
+            /**
+             * 如果指定，此正則表達式字符串是一個正則表達式規則，這意味著整個請求標頭值必須與正則表達式匹配。 
+             * 如果只有請求標頭值的子序列與正則表達式匹配，則規則將不匹配
+             * @deprecated 使用 string_match 替代
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/type/matcher/v3/regex.proto#envoy-v3-api-msg-type-matcher-v3-regexmatcher type.matcher.v3.RegexMatcher}
+             */
+            safe_regex_match?: type.matcher.v3.RegexMatcher
+            /**
+             * 如果指定，將根據范圍執行標頭匹配。 
+             * @remarks
+             * 如果請求標頭值在此範圍內，則規則將匹配。 
+             * 整個請求標頭值必須表示以 10 為基數的整數：由可選的加號或減號組成，後跟一串數字。 
+             * 如果標頭值不表示整數，則規則將不匹配。 對於空值、浮點數或只有標頭值的子序列是整數，匹配將失敗
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/type/v3/range.proto#envoy-v3-api-msg-type-v3-int64range type.v3.Int64Range}
+             */
+            range_match?: type.v3.Int64Range
+            /**
+             * 如果指定為 true，將根據請求中是否包含請求頭來匹配請求頭。 
+             * 如果指定為false，則根據header是否缺失進行header匹配。
+             */
+            present_match?: boolean
+            /**
+             * 如果指定，將根據標頭值的前綴執行標頭匹配。 注意：不允許使用空前綴
+             * @deprecated 使用 string_match 替代
+             */
+            prefix_match?: string
+            /**
+             * 如果指定，將根據標頭值的後綴執行標頭匹配。 注意：不允許使用空後綴
+             * @deprecated 使用 string_match 替代
+             */
+            suffix_match?: string
+            /**
+             * 如果指定，將根據標頭值是否包含給定值來執行標頭匹配。 注意：空包含匹配是不允許的
+             * @deprecated 使用 string_match 替代
+             */
+            contains_match?: string
+            /**
+             * 如果指定，則根據header值的字符串匹配進行header匹配
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/type/matcher/v3/string.proto#envoy-v3-api-msg-type-matcher-v3-stringmatcher type.matcher.v3.StringMatcher}
+             */
+            string_match?: type.matcher.v3.StringMatcher
+            /**
+             * 如果指定，匹配結果將在檢查之前被反轉
+             * @defaultValue false
+             */
+            invert_match?: boolean
+            /**
+             * 如果指定，對於任何一個header匹配規則，如果header匹配規則指定的header不存在，這個header值將被視為空
+             * @defaultValue false
+             */
+            treat_missing_header_as_empty?: boolean
+        }
         /**
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-queryparametermatcher config.route.v3.QueryParameterMatcher}
          */
@@ -796,7 +986,62 @@ export namespace config {
          * @alpha
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-redirectaction config.route.v3.RedirectAction}
          */
-        export interface RedirectAction { }
+        export interface RedirectAction {
+            /**
+             * URL.scheme 替換爲 https
+             * @remarks
+             * 如果源 URI.scheme 是 http 並且端口明確設置為 :80，則端口將在重定向後刪除
+             * 如果源 URI.scheme 是 https 並且端口明確設置為 :443，則端口將在重定向後刪除
+             */
+            https_redirect?: boolean
+            /**
+             * URL.scheme 替換爲 此值
+             * @remarks
+             * 如果源 URI.scheme 是 http 並且端口明確設置為 :80，則端口將在重定向後刪除
+             * 如果源 URI.scheme 是 https 並且端口明確設置為 :443，則端口將在重定向後刪除
+             */
+            scheme_redirect?: string
+            /**
+             * URL.host  替換爲 此值
+             */
+            host_redirect?: string
+            /**
+             * (uint32) URL.port  替換爲 此值
+             */
+            port_redirect?: number
+            /**
+             * URL.path 替換爲 此值
+             * @remarks
+             * 請注意 path_redirect 中的查詢字符串將覆蓋請求的查詢字符串並且不會被刪除
+             */
+            path_redirect?: string
+            /**
+             * 指示在重定向期間，匹配的前綴（或路徑）應與此值交換。 
+             * 此選項允許根據請求動態創建重定向 URL
+             */
+            prefix_rewrite?: string
+            /**
+             * 指示在重定向期間，應重寫與模式匹配的路徑部分，甚至允許將模式中的捕獲組替換為重寫替換字符串指定的新路徑。 
+             * 這對於允許以識別具有可變內容（如標識符）的段的方式重寫應用程序路徑很有用
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/type/matcher/v3/regex.proto#envoy-v3-api-msg-type-matcher-v3-regexmatchandsubstitute type.matcher.v3.RegexMatchAndSubstitute}
+             */
+            regex_rewrite?: type.matcher.v3.RegexMatchAndSubstitute
+            /**
+             * 在重定向響應中使用的 HTTP 狀態代碼。 默認響應代碼是 MOVED_PERMANENTLY (301)
+             * - MOVED_PERMANENTLY 301
+             * - FOUND 302
+             * - SEE_OTHER 303
+             * - TEMPORARY_REDIRECT 307
+             * - PERMANENT_REDIRECT 308
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-enum-config-route-v3-redirectaction-redirectresponsecode config.route.v3.RedirectAction.RedirectResponseCode}
+             */
+            response_code?: 'MOVED_PERMANENTLY' | 'FOUND' | 'SEE_OTHER' | 'TEMPORARY_REDIRECT' | 'PERMANENT_REDIRECT'
+            /**
+             * 指示在重定向期間，URL 的查詢部分將被刪除
+             * @defaultValue false
+             */
+            strip_query?: boolean
+        }
         /**
          * @alpha
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-directresponseaction config.route.v3.DirectResponseAction}
@@ -1012,6 +1257,27 @@ export namespace config {
         export interface CustomInlineHeader { }
     }
     export namespace core.v3 {
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-datasource config.core.v3.DataSource}
+         */
+        export interface DataSource {
+            /**
+             * 本地文件系統數據源
+             */
+            filename?: string
+            /**
+             *  內聯的 bytes 數據源
+             */
+            inline_bytes?: any
+            /**
+             * 內聯字符串
+             */
+            inline_string?: string
+            /**
+             * 環境變量數據源
+             */
+            environment_variable?: string
+        }
         /**
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-runtimefractionalpercent config.core.v3.RuntimeFractionalPercent}
          */
