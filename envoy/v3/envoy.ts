@@ -524,6 +524,28 @@ export namespace config {
              * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-routeaction-requestmirrorpolicy config.route.v3.RouteAction.RequestMirrorPolicy}
              */
             export interface RequestMirrorPolicy { }
+
+            /**
+             * @alpha
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-routeaction-hashpolicy config.route.v3.RouteAction.HashPolicy}
+             */
+            export interface HashPolicy { }
+
+            /**
+             * @alpha
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-routeaction-upgradeconfig config.route.v3.RouteAction.UpgradeConfig}
+             */
+            export interface UpgradeConfig { }
+            /**
+             * @alpha
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-enum-config-route-v3-routeaction-internalredirectaction config.route.v3.RouteAction.InternalRedirectAction}
+             */
+            export interface InternalRedirectAction { }
+            /**
+             * @alpha
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-routeaction-maxstreamduration config.route.v3.RouteAction.MaxStreamDuration}
+             */
+            export interface MaxStreamDuration { }
         }
         export namespace RouteMatch {
             /**
@@ -536,6 +558,10 @@ export namespace config {
              */
             export interface TlsContextMatchOptions { }
         }
+        /**
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-internalredirectpolicy config.route.v3.InternalRedirectPolicy}
+         */
+        export interface InternalRedirectPolicy { }
         /**
          * @alpha
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route.proto#envoy-v3-api-msg-config-route-v3-routeconfiguration config.route.v3.RouteConfiguration}
@@ -982,42 +1008,194 @@ export namespace config {
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-routeaction config.route.v3.RouteAction}
          */
         export interface RouteAction {
-            //             "cluster": ...,
-            //   "cluster_header": ...,
-            //   "weighted_clusters": {...},
-            //   "cluster_specifier_plugin": ...,
-            //   "inline_cluster_specifier_plugin": {...},
-            //   "cluster_not_found_response_code": ...,
-            //   "metadata_match": {...},
-            //   "prefix_rewrite": ...,
-            //   "regex_rewrite": {...},
-            //   "path_rewrite_policy": {...},
-            //   "host_rewrite_literal": ...,
-            //   "auto_host_rewrite": {...},
-            //   "host_rewrite_header": ...,
-            //   "host_rewrite_path_regex": {...},
-            //   "append_x_forwarded_host": ...,
-            //   "timeout": {...},
-            //   "idle_timeout": {...},
-            //   "early_data_policy": {...},
-            //   "retry_policy": {...},
-            //   "request_mirror_policies": [],
-            //   "priority": ...,
-            //   "rate_limits": [],
-            //   "include_vh_rate_limits": {...},
-            //   "hash_policy": [],
-            //   "cors": {...},
-            //   "max_grpc_timeout": {...},
-            //   "grpc_timeout_offset": {...},
-            //   "upgrade_configs": [],
-            //   "internal_redirect_policy": {...},
-            //   "internal_redirect_action": ...,
-            //   "max_internal_redirects": {...},
-            //   "hedge_policy": {...},
-            //   "max_stream_duration": {...}
+            /**
+             * 指示應將請求路由到的上游集群
+             */
+            cluster?: string
+            /**
+             * Envoy 將通過從請求標頭中讀取由 cluster_header 命名的 HTTP 標頭的值來確定要路由到的集群。 
+             * 如果找不到標頭或引用的集群不存在，Envoy 將返回 404 響應
+             */
+            cluster_header?: string
+            /**
+             * 可以為給定路由指定多個上游集群。 根據分配給每個集群的權重，請求被路由到上游集群之一
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-weightedcluster config.route.v3.WeightedCluster}
+             */
+            weighted_clusters?: WeightedCluster
+            /**
+             * 集群說明符插件的名稱，用於確定此路由上請求的集群
+             */
+            cluster_specifier_plugin?: string
+            /**
+             * 自定義集群說明符插件配置，用於確定此路由上請求的集群
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-clusterspecifierplugin config.route.v3.ClusterSpecifierPlugin}
+             */
+            inline_cluster_specifier_plugin?: ClusterSpecifierPlugin
+            /**
+             * 找不到配置的集群時使用的 HTTP 狀態代碼。 默認響應代碼是 503 服務不可用
+             * - SERVICE_UNAVAILABLE 503
+             * - NOT_FOUND 404
+             * - INTERNAL_SERVER_ERROR 500
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-enum-config-route-v3-routeaction-clusternotfoundresponsecode config.route.v3.RouteAction.ClusterNotFoundResponseCod}
+             */
+            cluster_not_found_response_code: 'SERVICE_UNAVAILABLE' | 'NOT_FOUND' | 'INTERNAL_SERVER_ERROR'
+            /**
+             * 子集負載均衡器使用的可選端點元數據匹配條件。 
+             * 只有元數據與此字段中設置的內容匹配的上游集群中的端點才會被考慮用於負載平衡
+             * 
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-metadata config.core.v3.Metadata}
+             */
+            metadata_match?: config.core.v3.Metadata
+            /**
+             * 指示在轉發期間，應將匹配的前綴（或路徑）與此值交換 
+             * @remarks
+             * 此選項允許應用程序 URL 的根路徑與在反向代理層公開的路徑不同。 
+             * 路由器過濾器將在重寫到 x-envoy-original-path 標頭之前放置原始路徑
+             */
+            prefix_rewrite?: string
+            /**
+             * 指示在轉發期間，應重寫與模式匹配的路徑部分，甚至允許將模式中的捕獲組替換為重寫替換字符串指定的新路徑
+             * @remarks
+             * 這對於允許以識別具有可變內容（如標識符）的段的方式重寫應用程序路徑很有用。 
+             * 路由器過濾器會將重寫之前的原始路徑放入 x-envoy-original-path 標頭中
+             * 
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/type/matcher/v3/regex.proto#envoy-v3-api-msg-type-matcher-v3-regexmatchandsubstitute type.matcher.v3.RegexMatchAndSubstitute}
+             */
+            regex_rewrite?: type.matcher.v3.RegexMatchAndSubstitute
+            /**
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/extension.proto#envoy-v3-api-msg-config-core-v3-typedextensionconfig config.core.v3.TypedExtensionConfig}
+             */
+            path_rewrite_policy?: config.core.v3.TypedExtensionConfig
+            /**
+             * 指示在轉發期間，host 標頭將與此值交換
+             * @remarks
+             * 如果設置了 append_x_forwarded_host，則使用此選項將附加 x-forwarded-host 標頭
+             */
+            host_rewrite_literal?: string
+            /**
+             * 指示在轉發期間，主機標頭將與集群管理器選擇的上游主機的主機名交換
+             * @remarks
+             * 僅當路由的目標集群是 strict_dns 或 logical_dns 類型時，此選項才適用。 
+             * 對於其他集群類型將此設置為 true 無效。 
+             * 如果設置了 append_x_forwarded_host，則使用此選項將附加 x-forwarded-host 標頭。
+             */
+            auto_host_rewrite?: boolean
+            /**
+             * 指示在轉發期間，主機標頭將與給定下游或自定義標頭的內容交換
+             * @remarks
+             * 如果標頭值為空，則主機標頭保持不變。 
+             * 如果設置了 append_x_forwarded_host，則使用此選項將附加 x-forwarded-host 標頭。
+             */
+            host_rewrite_header?: string
+            /**
+             * 指示在轉發期間，主機標頭將與對路徑值執行正則表達式替換並刪除查詢和片段的結果進行交換
+             * @remarks
+             * 這對於在路徑段和子域之間轉換變量內容很有用。 
+             * 如果設置了 append_x_forwarded_host，則使用此選項將附加 x-forwarded-host 標頭。
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/type/matcher/v3/regex.proto#envoy-v3-api-msg-type-matcher-v3-regexmatchandsubstitute type.matcher.v3.RegexMatchAndSubstitute}
+             */
+            host_rewrite_path_regex?: type.matcher.v3.RegexMatchAndSubstitute
+            /**
+             * 如果設置，則主機重寫操作（host_rewrite_literal、auto_host_rewrite、host_rewrite_header 或 host_rewrite_path_regex 之一）會導致主機標頭的原始值（如果有）附加到 x-forwarded-host HTTP 標頭
+             */
+            append_x_forwarded_host?: boolean
+            /**
+             * 指定路由的上游超時
+             * @remarks
+             * 這跨越整個下游請求（即流結束）已被處理和上游響應已被完全處理的時間點。
+             * 值為 0 將禁用路由的超時
+             * 
+             * @defaultValue 15s
+             * {@link https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#duration Duration}
+             */
+            timeout?: string
+            /**
+             * 指定路由的空閒超時
+             * @remarks
+             * 如果未指定，則沒有每個路由的空閒超時，儘管連接管理器範圍內的 stream_idle_timeout 仍然適用。 
+             * 值為 0 將完全禁用路由的空閒超時，即使配置了連接管理器流空閒超時也是如此
+             * {@link https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#duration Duration}
+             */
+            idle_timeout?: string
+            /**
+             * 指定如何通過 TLS 早期數據發送請求。 如果不存在，則允許在早期數據上發送安全的 HTTP 請求
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/extension.proto#envoy-v3-api-msg-config-core-v3-typedextensionconfig config.core.v3.TypedExtensionConfig}
+             */
+            early_data_policy?: config.core.v3.TypedExtensionConfig
+            /**
+             * 表示該路由有重試策略。 請注意，如果設置了此項，它將完全優先於虛擬主機級別的重試策略
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-retrypolicy config.route.v3.RetryPolicy}
+             */
+            retry_policy?: config.route.v3.RetryPolicy
+            /**
+             * 指定一組路由請求鏡像策略。 它優先於虛擬主機和路由配置鏡像策略。 即不合併策略，最具體的非空策略成為鏡像策略。
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-routeaction-requestmirrorpolicy config.route.v3.RouteAction.RequestMirrorPolicy}
+             */
+            request_mirror_policies?: Array<config.route.v3.RouteAction.RequestMirrorPolicy>
+            /**
+             * 指定路由優先級
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-enum-config-core-v3-routingpriority config.core.v3.RoutingPriority}
+             */
+            priority?: config.core.v3.RoutingPriority
+            /**
+             * 指定一組可應用於路由的速率限製配置
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-ratelimit config.route.v3.RateLimit}
+             */
+            rate_limits?: Array<config.route.v3.RateLimit>
+            /**
+             * 指定速率限製過濾器是否應包括虛擬主機速率限制。 默認情況下，如果路由配置了速率限制，則虛擬主機 rate_limits 不會應用於請求
+             */
+            include_vh_rate_limits?: boolean
+            /**
+             * 指定用於環哈希負載平衡的哈希策略列表
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-routeaction-hashpolicy config.route.v3.RouteAction.HashPolicy}
+             */
+            hash_policy?: Array<config.route.v3.RouteAction.HashPolicy>
+            /**
+             * 指示路由具有 CORS 策略
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-corspolicy config.route.v3.CorsPolicy}
+             */
+            cors?: config.route.v3.CorsPolicy
+            /**
+             * @deprecated 使用 grpc_timeout_header_max  替代
+             * {@link https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#duration Duration}
+             */
+            max_grpc_timeout?: string
+            /**
+             * @deprecated 使用 grpc_timeout_header_max  替代
+             * {@link https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#duration Duration}
+             */
+            grpc_timeout_offset?: string
+            /**
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-routeaction-upgradeconfig config.route.v3.RouteAction.UpgradeConfig}
+             */
+            upgrade_configs?: Array<config.route.v3.RouteAction.UpgradeConfig>
+            /**
+             * 如果存在，Envoy 將嘗試遵循上游重定向響應，而不是將響應代理回下游。 
+             * 上游重定向響應由 redirect_response_codes 定義
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-internalredirectpolicy config.route.v3.InternalRedirectPolicy}
+             */
+            internal_redirect_policy?: config.route.v3.InternalRedirectPolicy
+            /**
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-enum-config-route-v3-routeaction-internalredirectaction config.route.v3.RouteAction.InternalRedirectAction}
+             */
+            internal_redirect_action?: config.route.v3.RouteAction.InternalRedirectAction
+            /**
+             * uint32 如果下游請求遇到的先前內部重定向的數量低於此值，則處理內部重定向，並且 internal_redirect_action 設置為 HANDLE_INTERNAL_REDIRECT 在下游請求通過內部重定向在多個路由之間反彈的情況下，第一個路由 達到此閾值，或將 internal_redirect_action 設置為 PASS_THROUGH_INTERNAL_REDIRECT 會將重定向傳遞回下游。
+             */
+            max_internal_redirects?: number
+            /**
+             * 表示路由有對沖策略。 請注意，如果設置了此項，它將完全優先於虛擬主機級別的對沖策略
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-hedgepolicy config.route.v3.HedgePolicy}
+             */
+            hedge_policy?: config.route.v3.HedgePolicy
+            /**
+             * 指定此路由的最大流持續時間
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-routeaction-maxstreamduration config.route.v3.RouteAction.MaxStreamDuration}
+             */
+            max_stream_duration?: config.route.v3.RouteAction.MaxStreamDuration
         }
         /**
-         * @alpha
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-redirectaction config.route.v3.RedirectAction}
          */
         export interface RedirectAction {
@@ -1080,7 +1258,17 @@ export namespace config {
          * @alpha
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-directresponseaction config.route.v3.DirectResponseAction}
          */
-        export interface DirectResponseAction { }
+        export interface DirectResponseAction {
+            /**
+             * 指定要返回的 HTTP 響應狀態
+             */
+            status?: number
+            /**
+             * 指定響應主體的內容。 如果省略此設置，則生成的響應中不包含正文
+             * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-datasource config.core.v3.DataSource}
+             */
+            body?: config.core.v3.DataSource
+        }
 
         /**
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-tracing config.route.v3.Tracing}
@@ -1139,6 +1327,11 @@ export namespace config {
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-hedgepolicy config.route.v3.HedgePolicy}
          */
         export interface HedgePolicy { }
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-weightedcluster config.route.v3.WeightedCluster}
+         */
+        export interface WeightedCluster { }
     }
     export namespace accesslog.v3 {
         /**
@@ -1291,6 +1484,11 @@ export namespace config {
         export interface CustomInlineHeader { }
     }
     export namespace core.v3 {
+        /**
+         * @alpha
+         * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-enum-config-core-v3-routingpriority config.core.v3.RoutingPriority}
+         */
+        export interface RoutingPriority { }
         /**
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/base.proto#envoy-v3-api-msg-config-core-v3-datasource config.core.v3.DataSource}
          */
