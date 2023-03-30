@@ -237,6 +237,7 @@ local listener = import 'envoy/v3/listener.libsonnet';
           listener.http_connection_manager({
             stat_prefix: 'http_ingress_default',
             access_log: [accesslog.stdout_log],
+            generate_request_id: false,
             // https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route.proto#envoy-v3-api-msg-config-route-v3-routeconfiguration
             route_config: {
               name: 'http_route_default',
@@ -279,9 +280,7 @@ local listener = import 'envoy/v3/listener.libsonnet';
             listener.http_connection_manager({
               stat_prefix: 'https_ingress_default',
               access_log: [accesslog.stdout_log],
-              upgrade_configs: {
-                upgrade_type: 'websocket',
-              },
+              generate_request_id: false,
               route_config: {
                 name: 'https_route_example',
                 virtual_hosts: [
@@ -289,21 +288,9 @@ local listener = import 'envoy/v3/listener.libsonnet';
                     name: 'https_host_example',
                     domains: ['*'],
                     routes: [
-                      // https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-route
-                      {
-                        match: {  // https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-routematch
-                          prefix: '/',
-                          headers: [{
-                            name: 'Upgrade',
-                            string_match: {
-                              exact: 'websocket',
-                            },
-                          }],
-                        },
-                        route: {  // https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-routeaction
-                          cluster: 'http_web',
-                        },
-                      },
+                      listener.route_websocket({
+                        cluster: 'http_web',
+                      }),
                       {
                         match: {  // https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-routematch
                           prefix: '/',

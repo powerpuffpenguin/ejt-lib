@@ -35,6 +35,24 @@ local transport_sockets_tls(opts) = {
     },
   },
 };
+local route_websocket(opts) = {
+  match: {
+    prefix: '/',
+    headers: [{
+      name: 'Upgrade',
+      string_match: {
+        exact: 'websocket',
+      },
+    }],
+  },
+  route: {
+    upgrade_configs: [
+      {
+        upgrade_type: 'websocket',
+      },
+    ] + if std.objectHas(opts, 'upgrade_configs') then opts.upgrade_configs else [],
+  } + opts,
+};
 {
   // 設置 LDS @type
   lds: {
@@ -57,4 +75,6 @@ local transport_sockets_tls(opts) = {
   // - dir?: string watched_directory
   // - alpn = ['h2', 'http/1.1']
   transport_sockets_tls(opts): transport_sockets_tls(opts),
+
+  route_websocket(opts): route_websocket(opts),
 }

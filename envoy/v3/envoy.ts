@@ -981,7 +981,41 @@ export namespace config {
          * @alpha
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-routeaction config.route.v3.RouteAction}
          */
-        export interface RouteAction { }
+        export interface RouteAction {
+            //             "cluster": ...,
+            //   "cluster_header": ...,
+            //   "weighted_clusters": {...},
+            //   "cluster_specifier_plugin": ...,
+            //   "inline_cluster_specifier_plugin": {...},
+            //   "cluster_not_found_response_code": ...,
+            //   "metadata_match": {...},
+            //   "prefix_rewrite": ...,
+            //   "regex_rewrite": {...},
+            //   "path_rewrite_policy": {...},
+            //   "host_rewrite_literal": ...,
+            //   "auto_host_rewrite": {...},
+            //   "host_rewrite_header": ...,
+            //   "host_rewrite_path_regex": {...},
+            //   "append_x_forwarded_host": ...,
+            //   "timeout": {...},
+            //   "idle_timeout": {...},
+            //   "early_data_policy": {...},
+            //   "retry_policy": {...},
+            //   "request_mirror_policies": [],
+            //   "priority": ...,
+            //   "rate_limits": [],
+            //   "include_vh_rate_limits": {...},
+            //   "hash_policy": [],
+            //   "cors": {...},
+            //   "max_grpc_timeout": {...},
+            //   "grpc_timeout_offset": {...},
+            //   "upgrade_configs": [],
+            //   "internal_redirect_policy": {...},
+            //   "internal_redirect_action": ...,
+            //   "max_internal_redirects": {...},
+            //   "hedge_policy": {...},
+            //   "max_stream_duration": {...}
+        }
         /**
          * @alpha
          * {@link https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#envoy-v3-api-msg-config-route-v3-redirectaction config.route.v3.RedirectAction}
