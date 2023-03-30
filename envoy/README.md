@@ -47,7 +47,7 @@
 
     - envoy.jsonnet 這是 envoy 主設定
     - cds.jsonnet 這是後端服務
-    - x509/default.jsonnet 使用 sds 動態更新 https 使用到的證書
+    - sds.jsonnet 使用 sds 動態更新 https 使用到的證書
     - lds.jsonnet 這是監聽器
 
 # envoy
