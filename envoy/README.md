@@ -201,8 +201,8 @@ local sds = import 'envoy/v3/sds.libsonnet';
     // https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/transport_sockets/tls/v3/secret.proto#envoy-v3-api-msg-extensions-transport-sockets-tls-v3-secret
     sds.inline_string({
       name: 'default',
-      certificate_chain: '/home/king/project/docker/envoy/cdnewstar.crt',
-      private_key: '/home/king/project/docker/envoy/cdnewstar.key',
+      certificate_chain: '/etc/envoy/x509.crt',
+      private_key: '/etc/envoy/x509.key',
     }),
   ],
 }
