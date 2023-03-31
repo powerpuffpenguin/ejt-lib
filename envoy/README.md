@@ -204,9 +204,11 @@ local sds = import 'envoy/v3/sds.libsonnet';
       //   https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/transport_sockets/tls/v3/common.proto#envoy-v3-api-msg-extensions-transport-sockets-tls-v3-tlscertificate
       tls_certificate: {
         certificate_chain: {
+          // inline_string: importstr '/etc/envoy/x509.crt',
           filename: '/etc/envoy/x509.crt',
         },
         private_key: {
+          // inline_string: importstr '/etc/envoy/x509.key',
           filename: '/etc/envoy/x509.key',
         },
       },
