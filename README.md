@@ -18,6 +18,13 @@ jsonnet 來替代 yaml 以簡單的書寫 envoy
 有了 ejt 提供的 jsonnet 就可以將繁雜的 yaml
 設定以函數等形式包裝，這個項目主要就是保存了這些代碼以供方便的書寫 envoy 代碼
 
+* [core](#core)
+* [envoy](#envoy)
+
+# core
+
+[core](core/README.md) 檔案夾下包含了一些通用的輔助函數
+
 # envoy
 
 [envoy](envoy/README.md) 檔案夾下包含了一些幫助創建 envoy 配置的腳本
